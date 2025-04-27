@@ -67,14 +67,14 @@
                     s += `<tr>
         <td>${ct.oname}</td>
         <td>${ct.oemail}</td>
-         <td><img src="${ct.ophoto}" alt="Owner Photo" width="80"/></td>
+         <td><img src="myuploads/${ct.ophoto}" alt="Owner Photo" width="80"/></td>
         <td>${ct.ocity}</td>
         <td>${ct.franchise}</td>
         <td>${ct.ostatus}</td>
         <td>
             ${ct.ostatus === "Blocked"
-                            ? `<button class="btn btn-success" id="accept" onclick="approve(${ct.id})" > Approve </button>`
-                            : `<button class="btn btn-danger" id='block'onclick="block(${ct.id})"> Block </button>`
+                            ? `<button class="btn btn-success" id="accept" onclick="approve('${ct.id}')" > Approve </button>`
+                            : `<button class="btn btn-danger" id='block'onclick="block('${ct.id}')"> Block </button>`
                             }
                            
         </td>
@@ -89,8 +89,8 @@
 
 
             }
-            function approve(id) {
-        fetch("/ApprovedButton?accept=" + accept(id))
+    function approve(id) {
+        fetch("/ApprovedButton?accept=" + id)
             .then(response => response.text())
             .then(ans => {
                 console.log(ans);
@@ -99,7 +99,7 @@
     }
 
     function block(id) {
-        fetch("/BlockedButton?block=" + block(id))
+        fetch("/BlockedButton?block=" + id)
             .then(response => response.text())
             .then(ans => {
                 console.log(ans);

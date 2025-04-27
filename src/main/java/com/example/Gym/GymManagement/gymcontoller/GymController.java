@@ -15,4 +15,19 @@ public class GymController {
     {
         return "OwnerSignUp";
     }
+     @GetMapping("/ownerlogin")
+      public String ownerlogin()
+      {
+          return "ownerLogin";
+      }
+       @GetMapping("/OwnerHome")
+      public String OwnerHome()
+      {
+          return "OwnerHome";
+      }
+       @GetMapping("/oManageGym")
+    public String oManageGym()
+    {
+        return "OwnerManageGym";
+    }
 }

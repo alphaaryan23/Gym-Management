@@ -43,7 +43,7 @@
             fetch(url, {method: "POST", body: formdata})
                     .then(response => response.text())
                     .then(ans => renderAsHtml(ans));
-            alert("hello");
+             
             }
 
             function renderAsHtml(ans) {
@@ -67,9 +67,9 @@
             var url = "/getcities";
             fetch(url)
                     .then(response => response.text())
-                    .then(ans => renderAsHtml(ans));
+                    .then(ans => renderAsHtml1(ans));
             }
-            function renderAsHtml(ans)
+            function renderAsHtml1(ans)
             {
             console.log(ans);
             var mainobj = JSON.parse(ans);
@@ -398,8 +398,13 @@
                                     <div class="form-group">
                                         <span class="adon-icon"></span>
                                         <label>City Description</label>
-                                        <input type="text" name="citydescription" id="cityd" value="" placeholder="City Description">
+                                        <textarea name="citydescription" id="cityd" value="" placeholder="City Description"></textarea>
                                     </div>
+                                    
+<!--                                    <div class="form-group col-12">
+                                        <label>City Description</label>
+                                        <textarea name="amenities" id="ameneties" rows="4" placeholder="e.g., abc, def, ghi " class="form-control"></textarea>
+                                    </div>-->
 
                                     <div class="clearfix">
                                         <div class="form-group pull-left">

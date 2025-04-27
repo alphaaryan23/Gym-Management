@@ -6,6 +6,7 @@ package com.example.Gym.GymManagement.Controllers;
 
 import com.example.Gym.GymManagement.Vmm.DbLoader;
 import com.example.Gym.GymManagement.Vmm.RDBMS_TO_JSON;
+import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,80 +91,7 @@ public class AdminRestController {
         }
     }
 
-    @GetMapping("/getownerdetails")
-    public String getownerdetails() {
-        String ans = new RDBMS_TO_JSON().generateJSON("select * from ownersignup");
-        return ans;
-    }
-
-  @GetMapping("/ApprovedButton")
-    public String approvedButton(@RequestParam String accept) {
-        int id = Integer.parseInt(accept);
-        try {
-            ResultSet rs = DbLoader.executeQuery("UPDATE ownersignup SET ostatus = 'Approved' WHERE id = " + id);
-            if (rs.next()) {
-                return "Approved";
-            } else {
-                return "Owner not found or update failed";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ex.toString();
-        }
-    }
-
-    @GetMapping("/BlockedButton")
-    public String blockedButton(@RequestParam String block) {
-        int id = Integer.parseInt(block);
-        try {
-             ResultSet rs = DbLoader.executeQuery("UPDATE ownersignup SET ostatus = 'Blocked' WHERE id = " + id);
-            if (rs.next()) {
-                return "Blocked";
-            } else {
-                return "Owner not found or update failed";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ex.toString();
-        }
-    }
-    
-    
-     @PostMapping("/ownermanagegym")
-    public String ownermanagegym(@RequestParam String gymname, @RequestParam String address, @RequestParam String latitude, @RequestParam String longitude, @RequestParam String ameneties, @RequestParam String myDropdown, @RequestParam MultipartFile photo) {
-
-        try {
-            ResultSet rs = DbLoader.executeQuery("select * from ownergym where gymname='" + gymname + "'");
-            if (rs.next()) {
-                return "fail";
-            } else {
-                String projectPath = System.getProperty("user.dir");
-                String internalPath = "/src/main/resources/static";
-                String folderName = "/myUploads";
-                String orgName = "/" + photo.getOriginalFilename();
-                FileOutputStream fos = new FileOutputStream(projectPath + internalPath + folderName + orgName);
-
-                byte[] b1 = photo.getBytes();
-
-                fos.write(b1);
-                fos.close();
-                rs.moveToInsertRow();
-                rs.updateString("gymname", gymname);
-                rs.updateString("Address", address);
-                rs.updateString("ogcity", myDropdown);
-                rs.updateString("latitude", latitude);
-                rs.updateString("longitude", longitude);
-                rs.updateString("Ameneties", ameneties);
-                rs.updateString("ogphoto", orgName);
-                rs.insertRow();
-                return "Added Successfully";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ex.toString();
-        }
-
-    }
+   
 }
 
 

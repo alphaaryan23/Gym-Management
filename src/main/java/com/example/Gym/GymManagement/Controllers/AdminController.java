@@ -30,19 +30,5 @@ public class AdminController {
       {
           return "AdminManageOwner";
       }
-        @GetMapping("/ownerlogin")
-      public String ownerlogin()
-      {
-          return "ownerLogin";
-      }
-       @GetMapping("/OwnerHome")
-      public String OwnerHome()
-      {
-          return "OwnerHome";
-      }
-       @GetMapping("/oManageGym")
-    public String oManageGym()
-    {
-        return "OwnerManageGym";
-    }
+        
 }
