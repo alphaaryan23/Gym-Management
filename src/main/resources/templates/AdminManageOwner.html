@@ -101,7 +101,7 @@
     function block(id) {
         fetch("/BlockedButton?block=" + id)
             .then(response => response.text())
-            .then(ans => {
+            .then(ans => {   
                 console.log(ans);
                 getownerdetails();
             });

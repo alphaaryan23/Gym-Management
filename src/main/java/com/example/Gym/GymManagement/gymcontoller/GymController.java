@@ -30,4 +30,9 @@ public class GymController {
     {
         return "OwnerManageGym";
     }
+     @GetMapping("/packageTable")
+    public String packageTable()
+    {
+        return "PackageTable";
+    }
 }

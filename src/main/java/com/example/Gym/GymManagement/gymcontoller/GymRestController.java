@@ -51,9 +51,9 @@ public class GymRestController {
             return "error: " + ex.getMessage();
         }
     }
-    
-      @PostMapping("/ownerlogin")
-    public String ownerlogin(@RequestParam String email, @RequestParam String pass , HttpSession session) {
+
+    @PostMapping("/ownerlogin")
+    public String ownerlogin(@RequestParam String email, @RequestParam String pass, HttpSession session) {
         try {
             System.out.println("oemail " + email);
             System.out.println("opassword " + pass);
@@ -69,14 +69,15 @@ public class GymRestController {
             return ex.toString();
         }
 
-}
-     @GetMapping("/getownerdetails")
+    }
+
+    @GetMapping("/getownerdetails")
     public String getownerdetails() {
         String ans = new RDBMS_TO_JSON().generateJSON("select * from ownersignup");
         return ans;
     }
 
-  @GetMapping("/ApprovedButton")
+    @GetMapping("/ApprovedButton")
     public String approvedButton(@RequestParam String accept) {
         int id = Integer.parseInt(accept);
         try {
@@ -96,7 +97,7 @@ public class GymRestController {
     public String blockedButton(@RequestParam String block) {
         int id = Integer.parseInt(block);
         try {
-             ResultSet rs = DbLoader.executeQuery("UPDATE ownersignup SET ostatus = 'Blocked' WHERE id = " + id);
+            ResultSet rs = DbLoader.executeQuery("UPDATE ownersignup SET ostatus = 'Blocked' WHERE id = " + id);
             if (rs.next()) {
                 return "Blocked";
             } else {
@@ -107,10 +108,16 @@ public class GymRestController {
             return ex.toString();
         }
     }
-    
-    
-     @PostMapping("/ownermanagegym")
-    public String ownermanagegym(HttpSession session , @RequestParam String gymname, @RequestParam String address, @RequestParam String latitude, @RequestParam String longitude, @RequestParam String ameneties, @RequestParam String myDropdown, @RequestParam MultipartFile photo) {
+
+    @PostMapping("/ownermanagegym")
+    public String ownermanagegym(HttpSession session,
+             @RequestParam String gymname,
+             @RequestParam String address,
+             @RequestParam String latitude,
+             @RequestParam String longitude,
+             @RequestParam String ameneties,
+             @RequestParam String myDropdown,
+             @RequestParam MultipartFile photo) {
 
         try {
             ResultSet rs = DbLoader.executeQuery("select * from ownergym where gymname='" + gymname + "'");
@@ -135,10 +142,10 @@ public class GymRestController {
                 rs.updateString("longitude", longitude);
                 rs.updateString("Ameneties", ameneties);
                 rs.updateString("ogphoto", orgName);
-               
-                Integer s=(Integer) session.getAttribute("id");
+
+                Integer s = (Integer) session.getAttribute("id");
                 System.out.println(s);
-                  rs.updateInt("ownerId", s);
+                rs.updateInt("ownerId", s);
                 rs.insertRow();
                 return "Added Successfully";
             }
@@ -148,17 +155,74 @@ public class GymRestController {
         }
 
     }
-     @GetMapping("/getgymdetails")
+
+    @GetMapping("/getgymdetails")
     public String getgymdetails() {
         String ans = new RDBMS_TO_JSON().generateJSON("select * from ownergym");
         return ans;
     }
+
     @PostMapping("/deleteGym")
     public String deleteGym(@RequestParam String id) {
         try {
             int myid = Integer.parseInt(id);
 
             ResultSet rs = DbLoader.executeQuery("SELECT * FROM ownergym WHERE id = " + myid);
+            if (rs.next()) {
+                rs.deleteRow();
+                return "success";
+            } else {
+                return "failure";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+
+    @PostMapping("/packagetable")
+    public String packagetable(HttpSession session,
+             @RequestParam String pname,
+             @RequestParam String pprice,
+             @RequestParam String offerprice,
+             @RequestParam String duration,
+             @RequestParam String inclusion,
+             @RequestParam int gid) {
+
+        try {
+            ResultSet rs = DbLoader.executeQuery("select * from packagetable where pname='" + pname + "'");
+            if (rs.next()) {
+                return "fail";
+            } else {
+                rs.moveToInsertRow();
+                rs.updateString("pname", pname);
+                rs.updateString("pprice", pprice);
+                rs.updateString("offerprice", offerprice);
+                rs.updateString("duration", duration);
+                rs.updateString("inclusion", inclusion);
+                rs.updateInt("gid", gid);
+
+                rs.insertRow();
+                return "Added Successfully";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+
+    @GetMapping("/getpackagedetails")
+    public String getpackagedetails() {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable");
+        return ans;
+    }
+    
+    @PostMapping("/deletePackage")
+    public String deletePackage(@RequestParam String id) {
+        try {
+            int myid = Integer.parseInt(id);
+
+            ResultSet rs = DbLoader.executeQuery("SELECT * FROM packagetable WHERE id = " + myid);
             if (rs.next()) {
                 rs.deleteRow();
                 return "success";
