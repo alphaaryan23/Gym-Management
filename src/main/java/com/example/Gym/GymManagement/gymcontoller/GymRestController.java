@@ -212,8 +212,8 @@ public class GymRestController {
     }
 
     @GetMapping("/getpackagedetails")
-    public String getpackagedetails() {
-        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable");
+    public String getpackagedetails(@RequestParam String id) {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where gid='"+id+"'");
         return ans;
     }
     
@@ -227,7 +227,48 @@ public class GymRestController {
                 rs.deleteRow();
                 return "success";
             } else {
-                return "failure";
+                return "failure";   
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+    
+    
+            
+    @PostMapping("/getEditData")
+    public String getEditData(@RequestParam int pid) {
+        System.out.println(pid);
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where id ="+pid+" ");
+        return ans;
+    }
+         
+    
+     @PostMapping("/updatetable")
+    public String updatetable(
+             @RequestParam String pname,
+             @RequestParam String pprice,
+             @RequestParam String offerprice,
+             @RequestParam String duration,
+             @RequestParam String inclusion,
+             @RequestParam String pid) {
+
+        try {
+            ResultSet rs = DbLoader.executeQuery("select * from packagetable where id='" + pid + "'");
+            if (rs.next()) {
+                 rs.moveToCurrentRow();
+                rs.updateString("pname", pname);
+                rs.updateString("pprice", pprice);
+                rs.updateString("offerprice", offerprice);
+                rs.updateString("duration", duration);
+                rs.updateString("inclusion", inclusion);
+               
+
+                rs.updateRow();
+                return "Updated Successfully";
+            } else {
+               return "fail";
             }
         } catch (Exception ex) {
             ex.printStackTrace();

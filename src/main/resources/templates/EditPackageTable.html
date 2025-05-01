@@ -4,7 +4,7 @@
     <!-- Mirrored from expert-themes.com/html/gym/price.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:32:59 GMT -->
     <head>
         <meta charset="utf-8">
-        <title>Package Table</title>
+        <title>Edit Package Table</title>
         <!-- Stylesheets -->
         <link href="css/bootstrap.css" rel="stylesheet">
 
@@ -32,11 +32,9 @@
 
         <script>
             var urlParams = new URLSearchParams(window.location.search);
-                var gid = urlParams.get('id');
-
-
-            function addPackage() {
-                
+            var pid = urlParams.get('id');
+            function UpdatePackage() {
+                alert("update called");
                 var pname = document.getElementById("pn").value;
                 var pprice = document.getElementById("pp").value;
                 var offerprice = document.getElementById("pop").value;
@@ -50,104 +48,61 @@
                 formdata.append("offerprice", offerprice);
                 formdata.append("duration", duration);
                 formdata.append("inclusion", inclusion);
-                formdata.append("gid", gid);
+                formdata.append("pid", pid);
 
 
-                var url = "/packagetable";
+                var url = "/updatetable";
                 fetch(url, {method: "POST", body: formdata})
                         .then(response => response.text())
                         .then(ans => renderAsHtml(ans));
 
             }
             function renderAsHtml(ans) {
-                if (ans === "Added Successfully") {
-                    alert("package added successfully!");
-//                    addPackage();
-//getpackagedetails();
+                if (ans === "Updated Successfully") {
+                    alert("package update successfully!");
+
                 } else {
                     alert("Failed: " + ans);
                 }
             }
+            function getData()
+            {
+                var formdata = new FormData();
 
-            function getpackagedetails() {
-                
-                var url = "/getpackagedetails?id="+gid;
-                fetch(url)
+                formdata.append("pid", pid);
+
+
+
+                var url = "/getEditData";
+                fetch(url, {method: "POST", body: formdata})
                         .then(response => response.text())
-                        .then(ans => renderPackage(ans));
+                        .then(ans => renderAsHtml1(ans));
             }
-            function renderPackage(ans) {
+
+            function renderAsHtml1(ans)
+            {
                 console.log(ans);
-                //alert(ans);
                 var mainobj = JSON.parse(ans);
                 var arr = mainobj["ans"];
-                var p = "";
-                p += `<h4 class="mt-5">Package Details Table</h4>
-               <table class="table table-bordered table-striped mt-3">
-               <thead class="thead-dark">
-               <tr>
-                <th>Package Name</th>
-                <th>Package Price</th>
-                <th>Offer Price</th>
-                <th>Package Duration</th>
-                <th>Package Inclusions</th>
-        <th>Action</th>
-        <th>Update Package</th>
-                
-            </tr>
-        </thead>
-        <tbody>`;
-                for (var i = 0; i < arr.length; i++) {
-                    var package = arr[i];
-                    p += `<tr>
-            <td>${package.pname}</td>
-            <td>${package.pprice}</td>
-            <td>${package.offerprice}</td> 
-            <td>${package.duration}</td>
-            <td>${package.inclusion}</td>
-          <td><button class="btn btn-danger" onclick="deletePackage(${package.id})">Delete</button></td>
-            <td><button class="btn btn-warning" onclick="edit(${package.id})" 2>Edit Package</button></td>
- 
-           
-        </tr>`;
-                }
-                p += `</tbody></table>`;
 
-                document.getElementById("p1").innerHTML = p;
-            }
-             function edit(id)
-             {
-                 window.location.href="/editpackageTable?id="+id ;
-             }
+                document.getElementById("pd").value = arr[0].duration;
+                document.getElementById("pi").value = arr[0].inclusion;
+                document.getElementById("pn").value = arr[0].pname;
+                document.getElementById("pp").value = arr[0].pprice;
+                document.getElementById("pop").value = arr[0].offerprice;
 
-            function deletePackage(id) {
-                alert("delete");
-                if (confirm("Are you sure you want to delete this package?")) {
-                    var formdata = new FormData();
-                    formdata.append("id", id);
 
-                    fetch("/deletePackage", {method: "POST", body: formdata})
-                            .then(response => response.text())
-                            .then(ans => {
-                                if (ans === "success") {
-                                    alert("package deleted successfully.");
-                                   getpackagedetails();
-                                } else {
-                                    alert("Error deleting package: " + ans);
-                                }
-                            });
-                }
             }
 
             document.addEventListener("DOMContentLoaded", function () {
-                getpackagedetails();
+                getData();
             });
 
 
         </script>
     </head>
 
-    <body class="hidden-bar-wrapper">
+    <body class="hidden-bar-wrapper" onload="">
 
         <div class="page-wrapper">
 
@@ -370,28 +325,28 @@
                                     </div>
                                     <div class="clearfix">
                                         <div class="form-group pull-left"> 
-                                            <button type="button" class="theme-btn btn-style-three" onclick="addPackage()"><span class="txt">Add package</span></button>
+                                            <button type="button" class="theme-btn btn-style-three" onclick="UpdatePackage()"><span class="txt">Update Details</span></button>
                                         </div>
 
                                     </div>
 
 
 
-                         
+
                                 </form>
-                               
+
                             </div>
 
                         </div>
 
                         <div id="p1" class="container mt-5">
-                          <hr class="my-4">
+                            <hr class="my-4">
                             <h4>Package Details Table</h4>
                         </div>
 
 
 
- 
+
 
                         <!-- Clients Section -->
                         <section class="clients-section style-two">

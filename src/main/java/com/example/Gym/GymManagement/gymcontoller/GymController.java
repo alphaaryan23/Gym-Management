@@ -32,7 +32,15 @@ public class GymController {
     }
      @GetMapping("/packageTable")
     public String packageTable()
+       
     {
         return "PackageTable";
+    }
+    
+     @GetMapping("/editpackageTable")
+    public String editpackageTable()
+       
+    {
+        return "EditPackageTable";
     }
 }
