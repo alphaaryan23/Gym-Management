@@ -275,4 +275,42 @@ public class GymRestController {
             return ex.toString();
         }
     }
+    
+     @PostMapping("/getEditOwnerData")
+    public String getEditOwnerData(HttpSession session) {
+        Integer oid=(Integer) session.getAttribute("id");
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from ownersignup where id ="+oid+" ");
+        return ans;
+    }
+         
+    
+     @PostMapping("/updatedetails")
+    public String updatedetails(
+            
+             @RequestParam String name,
+             @RequestParam String city,
+             @RequestParam String franchise,
+             
+             HttpSession session) {
+
+        try {
+            Integer oid=(Integer) session.getAttribute("id");
+            ResultSet rs = DbLoader.executeQuery("select * from ownersignup where id='" + oid + "'");
+            if (rs.next()) {
+                
+                 rs.moveToCurrentRow();
+                rs.updateString("oname", name);
+                rs.updateString("ocity", city);
+                rs.updateString("franchise", franchise);
+//                rs.updateString("ophoto" , photo);
+              rs.updateRow();
+                return "Updated Successfully";
+            } else {
+               return "fail";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
 }

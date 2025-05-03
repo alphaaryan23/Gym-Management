@@ -18,7 +18,7 @@ public class GymController {
      @GetMapping("/ownerlogin")
       public String ownerlogin()
       {
-          return "ownerLogin";
+          return "OwnerLogin2";
       }
        @GetMapping("/OwnerHome")
       public String OwnerHome()
@@ -42,5 +42,12 @@ public class GymController {
        
     {
         return "EditPackageTable";
+    }
+    
+      @GetMapping("/editownerDetail")
+    public String editownerDetail()
+       
+    {
+        return "/EditOwnerDetails";
     }
 }
