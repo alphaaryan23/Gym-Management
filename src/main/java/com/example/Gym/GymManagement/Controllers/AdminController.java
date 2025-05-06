@@ -30,5 +30,26 @@ public class AdminController {
       {
           return "AdminManageOwner";
       }
-        
+        @GetMapping("/usersignup")
+      public String usersignup()
+      {
+          return "UserSignup";
+      }
+      
+       @GetMapping("/userlogin")
+      public String userlogin()
+      {
+          return "UserLogin";
+      }
+     
+         @GetMapping("/uhome")
+    public String uhome()
+    {
+        return "UserHome";
+    }
+     @GetMapping("/morecities")
+      public String morecities()
+     {
+          return "MoreCities";
+      }
 }

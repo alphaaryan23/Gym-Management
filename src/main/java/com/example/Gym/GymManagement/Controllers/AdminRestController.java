@@ -90,9 +90,60 @@ public class AdminRestController {
             return ex.toString();
         }
     }
+  
+    @PostMapping("/usersignup")
+    public String usersignup(@RequestParam String name, @RequestParam String pass, @RequestParam String email, @RequestParam String phoneno, @RequestParam String address, @RequestParam MultipartFile photo) {
 
-   
-}
+        try {
+
+            ResultSet rs = DbLoader.executeQuery("SELECT * FROM usersignup WHERE useremail = '" + email + "'");
+            if (rs.next()) {
+                return "fail";
+            } else {
+
+                String projectPath = System.getProperty("user.dir");
+                String internalPath = "/src/main/resources/static";
+                String folderName = "/myUploads";
+                String orgName = "/" + photo.getOriginalFilename();
+
+                rs.moveToInsertRow();
+
+                rs.updateString("username", name);
+                rs.updateString("useremail", email);
+                rs.updateString("userpassword", pass);
+                rs.updateString("phoneno", phoneno);
+                rs.updateString("address", address);
+                rs.updateString("photo", orgName);
+                
+                rs.insertRow();
+
+                return "success";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "error: " + ex.getMessage();
+        }
+    }
+   @PostMapping("/userlogin")
+    public String userlogin(@RequestParam String email, @RequestParam String pass) {
+        try {
+            System.out.println("useremail " + email);
+            System.out.println("userpassword " + pass);
+            ResultSet rs = DbLoader.executeQuery("Select * from  usersignup where useremail = '" + email + "' and userpassword = '" + pass + "' ");
+            if (rs.next()) {
+//                session.setAttribute("id", rs.getInt("id"));
+                return "success";
+            } else {
+                return "failed";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+
+    }
+  }
+
 
 
     
