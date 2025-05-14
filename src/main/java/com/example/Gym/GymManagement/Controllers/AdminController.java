@@ -52,4 +52,15 @@ public class AdminController {
      {
           return "MoreCities";
       }
+      
+      @GetMapping("/choosecitiesgym")
+      public String choosecitiesgym()
+     {
+          return "ChooseCitiesGym";
+      }
+       @GetMapping("/usergymdetail")
+      public String usergymdetail()
+     {
+          return "UserGymDetail";
+      }
 }

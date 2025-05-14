@@ -8,7 +8,7 @@
 
 <meta charset="utf-8">
 
-<title>Gym HTML-5 Template | Homepage</title>
+<title>User Home</title>
 
 <!-- Stylesheets -->
 
@@ -103,6 +103,7 @@
                                                         <div class="text">${ct.cdesc}</div>
 
                                                    <div class="btn-two-outer"> <button onclick="knowmore(${ct.id})" class="theme-btn btn-style-two" type="submit" name="submit-form"><span class="txt">Know More</span></button></div>
+            
 
                                                 </div>
 
@@ -115,6 +116,10 @@
                 
                 
             }
+             function knowmore(id)
+             {
+                 window.location.href="/choosecitiesgym?id="+id;
+             }
              document.addEventListener("DOMContentLoaded", function () {
                
                 getcities();

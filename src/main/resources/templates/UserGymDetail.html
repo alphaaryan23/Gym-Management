@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 
-    <!-- Mirrored from expert-themes.com/html/gym/account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
+    <!-- Mirrored from expert-themes.com/html/gym/portfolio-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:05 GMT -->
     <head>
         <meta charset="utf-8">
-        <title>Admin Login</title>
+        <title>User Gym Detail</title>
         <!-- Stylesheets -->
         <link href="css/bootstrap.css" rel="stylesheet">
 
@@ -28,36 +28,99 @@
 
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-
         <script>
-            function login() {
-                var name = document.getElementById("naam").value;
-                var pass = document.getElementById("pass").value;
-
+            var urlParams = new URLSearchParams(window.location.search);
+            var uid = urlParams.get('id');
+            var gid = urlParams.get('id');
+            function usergymdetail() {
                 var formdata = new FormData();
-                formdata.append("name", name);
-                formdata.append("pass", pass);
-
-                var url = "/adminLogin";    
+                formdata.append("uid", uid);
+                formdata.append("gid", gid);
+                var url = "/usergymdetails";
                 fetch(url, {method: "POST", body: formdata})
                         .then(response => response.text())
                         .then(ans => renderAsHtml(ans));
-            }
 
+            }
             function renderAsHtml(ans) {
-                console.log(ans)
-                if (ans === "success") {
-                     window.location.href="/ahome";
-                    alert(ans);
-                } else
-                {
-                    alert(ans);
+                console.log(ans);
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                console.log(arr);
+                var ct = arr[0];
+                var amenitiesList = ct.Ameneties.split(",");
+                var amenitiesHTML = '<ul class="list-style-two">';
+                for (var j = 0; j < amenitiesList.length; j++) {
+                    var amenity = amenitiesList[j].trim();
+                    amenitiesHTML += `<li><i class=" " style="color:red; margin-right:6px;"></i>${amenity}</li>`;
                 }
+                amenitiesHTML += '</ul>';
 
+                var p = `
+    <div class="content-column col-lg-8 col-md-12 col-sm-12">
+        <div class="inner-column">
+            <h3>Our Training Tips</h3>
+            ${amenitiesHTML}
+           
+        </div>
+    </div>`;
 
+                document.getElementById("amen").innerHTML = p;
+                document.getElementById("addr").innerHTML = ct.Address;
+                document.getElementById("photo").src = "myuploads/" + ct.ogphoto;
             }
-        </script>
 
+            function getpackagedetails() {
+
+                var url = "/getpackagedetails?id=" + gid;
+                fetch(url)
+                        .then(response => response.text())
+                        .then(ans => renderPackage(ans));
+            }
+            function renderPackage(ans) {
+                console.log(ans);
+                //alert(ans);
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                console.log(arr);
+                var s = arr[0];
+                var inclusionList = s.inclusion.split(",");
+                var inclusionHTML = ' <ul class="price-list">';
+                for (var i = 0; i < inclusionList.length; i++) {
+                    var inclusion = inclusionList[i].trim();
+                    inclusionHTML += `<li>${inclusion}</li>`;
+                }
+                inclusionHTML += '</ul>';
+
+var p = `
+        <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
+            <div class="inner-box" style="background-image:url(images/resource/price-1.jpg)">
+                <h4>${s.pname}</h4>
+                <div class="title">Here Goes Some Description</div>
+                <div class="price">For ${s.duration} <span>${s.pprice}</span></div>
+                <ul class="price-list">
+                    ${inclusionHTML}
+                </ul>
+                <div class="btn-one-outer">
+                    <a href="#" class="theme-btn btn-style-one" type="submit">
+                        <span class="txt">Select Now</span>
+                    </a>
+                </div>
+            </div>
+        </div>`;
+
+
+//                document.getElementById("offerprice").value = arr[0].pname;
+//                document.getElementById("pi").value = arr[0].duration;
+                document.getElementById("ugd1").innerHTML = p;
+//                document.getElementById("inclusion").innerHTML = p;
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                usergymdetail();
+                getpackagedetails();
+            });
+        </script>
     </head>
 
     <body class="hidden-bar-wrapper">
@@ -159,19 +222,19 @@
                                                 <li><a href="classes-detail.html">Classes Detail</a></li>
                                             </ul>
                                         </li>
-                                        <li class="dropdown"><a href="#">Portfolio</a>
+                                        <li class="current dropdown"><a href="#">Portfolio</a>
                                             <ul>
                                                 <li><a href="portfolio.html">Portfolio</a></li>
                                                 <li><a href="portfolio-detail.html">Portfolio Detail</a></li>
                                             </ul>
                                         </li>
-                                        <li class="current dropdown"><a href="#">Shop</a>
+                                        <li class="dropdown"><a href="#">Shop</a>
                                             <ul>
                                                 <li><a href="shop.html">Our Products</a></li>
                                                 <li><a href="shop-single.html">Product Single</a></li>
                                                 <li><a href="shopping-cart.html">Shopping Cart</a></li>
                                                 <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="Adminlogin.html">Account</a></li>
+                                                <li><a href="account.html">Account</a></li>
                                             </ul>
                                         </li>
                                         <li class="dropdown"><a href="#">Blog</a>
@@ -230,13 +293,13 @@
                 <div class="auto-container">
                     <div class="clearfix">
                         <div class="pull-left">
-                            <h2>Login / Register</h2>
+                            <h2>MOTIVATION</h2>
                             <div class="text">Fitness is not a destination it is a way of life.</div>
                         </div>
                         <div class="pull-right">
                             <ul class="page-breadcrumb">
                                 <li><a href="index-2.html">home</a></li>
-                                <li>Login / Register</li>
+                                <li>Motivation</li>
                             </ul>
                         </div>
                     </div>
@@ -244,143 +307,250 @@
             </section>
             <!--End Page Title-->
 
-            <!-- Sidebar Cart Item -->
-            <div class="xs-sidebar-group info-group">
-                <div class="xs-overlay xs-bg-black"></div>
-                <div class="xs-sidebar-widget">
-                    <div class="sidebar-widget-container">
-                        <div class="widget-heading">
-                            <a href="#" class="close-side-widget">
-                                X
-                            </a>
+            <!-- Portfolio Detail Section -->
+            <section class="portfolio-detail-section">
+                <div class="auto-container">
+                    <div class="inner-box">
+                        <div class="image" >
+                            <img src="images/gallery/10.jpg" id="photo" alt="" />
                         </div>
-                        <div class="sidebar-textwidget">
+                        <div class="row clearfix">
 
-                            <!-- Sidebar Info Content -->
-                            <div class="sidebar-info-contents">
-                                <div class="content-inner">
-                                    <div class="logo">
-                                        <a href="index-2.html"><img src="images/logo.png" alt="" /></a>
-                                    </div>
-                                    <div class="content-box">
-                                        <h2>About Us</h2>
-                                        <p class="text">The argument in favor of using filler text goes something like this: If you use real content in the Consulting Process, anytime you reach a review point you’ll end up reviewing and negotiating the content itself and not the design.</p>
-                                        <a href="#" class="theme-btn btn-style-two"><span class="txt">Consultation</span></a>
-                                    </div>
-                                    <div class="contact-info">
-                                        <h2>Contact Info</h2>
-                                        <ul class="list-style-one">
-                                            <li><span class="icon fa fa-location-arrow"></span>Chicago 12, Melborne City, USA</li>
-                                            <li><span class="icon fa fa-phone"></span>(111) 111-111-1111</li>
-                                            <li><span class="icon fa fa-envelope"></span>Gym@gmail.com</li>
-                                            <li><span class="icon fa fa-clock-o"></span>Week Days: 09.00 to 18.00 Sunday: Closed</li>
-                                        </ul>
-                                    </div>
-                                    <!-- Social Box -->
-                                    <ul class="social-box">
-                                        <li class="facebook"><a href="#" class="fa fa-facebook-f"></a></li>
-                                        <li class="twitter"><a href="#" class="fa fa-twitter"></a></li>
-                                        <li class="linkedin"><a href="#" class="fa fa-linkedin"></a></li>
-                                        <li class="instagram"><a href="#" class="fa fa-instagram"></a></li>
-                                        <li class="youtube"><a href="#" class="fa fa-youtube"></a></li>
+                            <!-- Info Column -->
+                            <div class="info-column col-lg-4 col-md-12 col-sm-12">
+                                <div class="inner-column">
+                                    <h4>Gym Details</h4>
+                                    <div class="text" id="addr" >There are many variations of passages of Lorem available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly but the majority have suffered alteration.</div>
+                                    <ul class="info-list">
+                                        <li><span>CLIENT</span>Nick</li>
+                                        <li><span>SERVICES</span>Personal</li>
+                                        <li><span>CATEGORIES</span>Fitness</li>
+                                        <li><span>YEAR</span>2025</li>
                                     </ul>
+                                </div>
+                            </div>
+
+                            <!-- Content Column -->
+                            <div class="content-column col-lg-8 col-md-12 col-sm-12">
+                                <div class="inner-column">
+                                    <!--<h3>Our Training Tips</h3>-->
+                                    <div class="text" id="amen" ><p>Lorem ipsum proin gravida nibh vel velit auctor aliqunean sollicitudinlorem quis bibendum auci elit consequat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio.</p></div>
+                                    <!--                                    <ul class="list-style-two">
+                                                                            <li>Train with the best experts in bodybuilding field.</li>
+                                                                            <li>Fitness is about being better than the person you were yesterday.</li>
+                                                                            <li>Our personal trainers will help you find a perfect workout.</li>
+                                                                        </ul>-->
+                                    <h3>FUN WORKOUTS</h3>
+                                    <p>Discover the joy of movement with our fun workouts designed to make fitness exciting! Whether you're dancing to your favorite beats, crushing a circuit challenge, or trying a new group class, every session is packed with energy and motivation. Get fit, stay happy, and enjoy every rep with us!</p><br>
+                                    <div class="row clearfix">
+
+                                        <!-- Column -->
+                                        <div class="column col-lg-6 col-md-6 col-sm-12">
+                                            <!-- Featured Block -->
+                                            <div class="featured-block">
+                                                <div class="block-inner">
+                                                    <span class="icon flaticon-man-1"></span>
+                                                    <strong>Expert Trainer</strong>
+                                                    <div class="feature-text">The class based sessions are challenging, innovative.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Column -->
+                                        <div class="column col-lg-6 col-md-6 col-sm-12">
+                                            <!-- Featured Block -->
+                                            <div class="featured-block">
+                                                <div class="block-inner">
+                                                    <span class="icon flaticon-people-1"></span>
+                                                    <strong>Modern Facility</strong>
+                                                    <div class="feature-text">mprove your body strength. Join our gym training’s.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- More Posts -->
+                        <div class="more-posts clearfix">
+                            <div class="pull-left">
+                                <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one"><span class="txt">PREVIOUS</span></a></div>
+                            </div>
+                            <div class="pull-right">
+                                <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one"><span class="txt">Next</span></a></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            <!-- End Portfolio Detail Section -->
+
+            <!-- Testimonial Section -->
+            <section class="testimonial-section">
+                <div class="auto-container">
+                    <div class="inner-container" style="background-image:url(images/background/5.jpg)">
+                        <div class="row clearfix">
+
+                            <!-- Title Column -->
+                            <div class="title-column col-lg-4 col-md-12 col-sm-12">
+                                <div class="inner-column">
+                                    <!-- Sec Title -->
+                                    <div class="sec-title light">
+                                        <div class="title">OUR TESTIMONIAL</div>
+                                        <h2>WHAT OUR CLIENTS <br> SAY ABOUT US</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Testimonial Column -->
+                            <div class="testimonial-column col-lg-8 col-md-12 col-sm-12">
+                                <div class="inner-column">
+                                    <div class="single-item-carousel owl-carousel owl-theme">
+
+                                        <!-- Testimonial Block Two -->
+                                        <div class="testimonial-block-two">
+                                            <div class="inner-box">
+                                                <div class="upper-box">
+                                                    <div class="author-image">
+                                                        <img src="images/resource/author-5.jpg" alt="" />
+                                                    </div>
+                                                    <div class="title">Nutritionist</div>
+                                                    <h4>Mellisa Martinez</h4>
+                                                    <div class="rating">
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="quote-icon flaticon-right-quote"></div>
+                                                <div class="text">Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et recusandae. </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Testimonial Block Two -->
+                                        <div class="testimonial-block-two">
+                                            <div class="inner-box">
+                                                <div class="upper-box">
+                                                    <div class="author-image">
+                                                        <img src="images/resource/author-5.jpg" alt="" />
+                                                    </div>
+                                                    <div class="title">Nutritionist</div>
+                                                    <h4>Mellisa Martinez</h4>
+                                                    <div class="rating">
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="quote-icon flaticon-right-quote"></div>
+                                                <div class="text">Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et recusandae. </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Testimonial Block Two -->
+                                        <div class="testimonial-block-two">
+                                            <div class="inner-box">
+                                                <div class="upper-box">
+                                                    <div class="author-image">
+                                                        <img src="images/resource/author-5.jpg" alt="" />
+                                                    </div>
+                                                    <div class="title">Nutritionist</div>
+                                                    <h4>Mellisa Martinez</h4>
+                                                    <div class="rating">
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                        <span class="fa fa-star"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="quote-icon flaticon-right-quote"></div>
+                                                <div class="text">Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et recusandae. </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- END sidebar widget item -->
+            </section>
+            <!-- End Testimonial Section -->
 
 
-            <!--Register Section-->
-            <section class="register-section">
+            <!-- Pricing Section -->
+            <section class="pricing-section">
+                <div class="image-layer" style="background-image:url(images/background/6.jpg)"></div>
                 <div class="auto-container">
-                    <div class="row clearfix">
+                    <!-- Sec Title -->
+                    <div class="sec-title light centered">
+                        <div class="title">Time Table</div>
+                        <h2>Working hours <br> & Classes</h2>
+                    </div>
+                    <div class="row clearfix" id="ugd1">
 
-                        <!--Form Column-->
-                        <div class="form-column column col-lg-12 col-md-12 col-sm-12">
-
-                            <div class="sec-title">
-                                <h2>Login Now</h2>
-                                <div class="separate"></div>
+                        <!-- Pricing Block -->
+                        <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box" style="background-image:url(images/resource/price-1.jpg)">
+                                <h4 id="pname">Basic Plan</h4>
+                                <div class="price" id="pi">For 1 Month<span id="pprice">$99</span></div>
+                                    <ul class="price-list" id="inclusion">
+                                        <li>Free Hand</li>
+                                        <li>Gym Fitness</li>
+                                        <li>Weight Loss</li>
+                                        <li>Personal Trainer</li>
+                                    </ul>
+                                    <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one" type="submit"><span class="txt">Select Now</span></a></div>
                             </div>
-
-                            <!--Login Form-->
-                            <div class="styled-form login-form">
-                                <form method="post" action="https://expert-themes.com/html/gym/index.html">
-                                    <div class="form-group">
-                                        <span class="adon-icon"><span class="fa fa-user"></span></span>
-                                        <input type="text" name="username" id="naam" value="" placeholder="Your Name *">
-                                    </div>
-                                    <!--                            <div class="form-group">
-                                                                    <span class="adon-icon"><span class="fa fa-envelope-o"></span></span>
-                                                                    <input type="email" name="useremil" id="em" value="" placeholder="Emai Address*">
-                                                                </div>-->
-                                    <div class="form-group">
-                                        <span class="adon-icon"><span class="fa fa-unlock-alt"></span></span>
-                                        <input type="password" name="userpassword" id="pass" value="" placeholder="Enter Password">
-                                    </div>
-                                    <div class="clearfix">
-                                        <div class="form-group pull-left">
-                                            <button type="button" class="theme-btn btn-style-three" onclick="login()"><span class="txt">Login Now</span></button>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="clearfix">
-                                        <div class="pull-left">
-                                            <input type="checkbox" id="remember-me"><label class="remember-me" for="remember-me">&nbsp; Remember Me</label>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-
                         </div>
 
-                        <!--                Form Column
-                                        <div class="form-column column col-lg-6 col-md-12 col-sm-12">
-                                        
-                                            <div class="sec-title">
-                                                <h2>Register Here</h2>
-                                                                        <div class="separate"></div>
-                                            </div>
-                                            
-                                            Login Form
-                                            <div class="styled-form register-form">
-                                                <form method="post" action="https://expert-themes.com/html/gym/index.html">
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-user"></span></span>
-                                                        <input type="text" name="username" value="" placeholder="Your Name *">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-envelope-o"></span></span>
-                                                        <input type="email" name="useremil" value="" placeholder="Emai Address*">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-unlock-alt"></span></span>
-                                                        <input type="password" name="userpassword" value="" placeholder="Enter Password">
-                                                    </div>
-                                                    <div class="clearfix">
-                                                        <div class="form-group pull-left">
-                                                            <button type="button" class="theme-btn btn-style-three"><span class="txt">Register here</span></button>
-                                                        </div>
-                                                        <div class="form-group submit-text pull-right">
-                                                                * You must be a free registered to submit content.
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </form>
-                                            </div>
-                                            
-                                        </div>
-                        -->
+                        <!-- Pricing Block -->
+                        <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box" style="background-image:url(images/resource/price-2.jpg)">
+                                <h4>Standard Plan</h4>
+                                <div class="title">Here Goes Some Descripation</div>
+                                <div class="price">For 6 Month<span>$149</span></div>
+                                <ul class="price-list">
+                                    <li>Free Hand</li>
+                                    <li>Gym Fitness</li>
+                                    <li>Weight Loss</li>
+                                    <li>Personal Trainer</li>
+                                </ul>
+                                <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one" type="submit"><span class="txt">Select Now</span></a></div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Block -->
+                        <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box" style="background-image:url(images/resource/price-3.jpg)">
+                                <h4>Ultimate Plan</h4>
+                                <div class="title">Here Goes Some Descripation</div>
+                                <div class="price">For 1 Year<span>$249</span></div>
+                                <ul class="price-list">
+                                    <li>Free Hand</li>
+                                    <li>Gym Fitness</li>
+                                    <li>Weight Loss</li>
+                                    <li>Personal Trainer</li>
+                                </ul>
+                                <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one" type="submit"><span class="txt">Select Now</span></a></div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>
-            <!--End Register Section-->
+            <!-- End Pricing Section -->
+
 
             <!-- Subscribe Section -->
             <section class="subscribe-section">
@@ -517,11 +687,59 @@
                 </div>
             </footer>
 
+            <!-- Sidebar Cart Item -->
+            <div class="xs-sidebar-group info-group">
+                <div class="xs-overlay xs-bg-black"></div>
+                <div class="xs-sidebar-widget">
+                    <div class="sidebar-widget-container">
+                        <div class="widget-heading">
+                            <a href="#" class="close-side-widget">
+                                X
+                            </a>
+                        </div>
+                        <div class="sidebar-textwidget">
+
+                            <!-- Sidebar Info Content -->
+                            <div class="sidebar-info-contents">
+                                <div class="content-inner">
+                                    <div class="logo">
+                                        <a href="index-2.html"><img src="images/logo.png" alt="" /></a>
+                                    </div>
+                                    <div class="content-box">
+                                        <h2>About Us</h2>
+                                        <p class="text">The argument in favor of using filler text goes something like this: If you use real content in the Consulting Process, anytime you reach a review point you’ll end up reviewing and negotiating the content itself and not the design.</p>
+                                        <a href="#" class="theme-btn btn-style-two"><span class="txt">Consultation</span></a>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h2>Contact Info</h2>
+                                        <ul class="list-style-one">
+                                            <li><span class="icon fa fa-location-arrow"></span>Chicago 12, Melborne City, USA</li>
+                                            <li><span class="icon fa fa-phone"></span>(111) 111-111-1111</li>
+                                            <li><span class="icon fa fa-envelope"></span>Gym@gmail.com</li>
+                                            <li><span class="icon fa fa-clock-o"></span>Week Days: 09.00 to 18.00 Sunday: Closed</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Social Box -->
+                                    <ul class="social-box">
+                                        <li class="facebook"><a href="#" class="fa fa-facebook-f"></a></li>
+                                        <li class="twitter"><a href="#" class="fa fa-twitter"></a></li>
+                                        <li class="linkedin"><a href="#" class="fa fa-linkedin"></a></li>
+                                        <li class="instagram"><a href="#" class="fa fa-instagram"></a></li>
+                                        <li class="youtube"><a href="#" class="fa fa-youtube"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END sidebar widget item -->
+
         </div>
         <!--End pagewrapper-->
 
         <!-- Color Palate / Color Switcher -->
-
         <div class="color-palate">
             <div class="color-trigger">
                 <i class="fa fa-gear"></i>
@@ -570,6 +788,7 @@
         <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-arrow-up"></span></div>
 
         <script src="js/jquery.js"></script>
+
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -579,14 +798,18 @@
         <script src="js/tilt.jquery.min.js"></script>
         <script src="js/jquery.paroller.min.js"></script>
         <script src="js/owl.js"></script>
-        <script src="js/mixitup.js"></script>
         <script src="js/wow.js"></script>
         <script src="js/nav-tool.js"></script>
         <script src="js/jquery-ui.js"></script>
         <script src="js/script.js"></script>
         <script src="js/color-settings.js"></script>
 
+        <!--Google Map APi Key-->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIJ_QKHN-bi6_1C9f5eYE3pZs1zhQIo5o"></script>
+        <script src="js/map-script.js"></script>
+        <!--End Google Map APi-->
+
     </body>
 
-    <!-- Mirrored from expert-themes.com/html/gym/account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
+    <!-- Mirrored from expert-themes.com/html/gym/portfolio-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:05 GMT -->
 </html>

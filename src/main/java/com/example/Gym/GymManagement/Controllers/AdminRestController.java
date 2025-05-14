@@ -142,6 +142,18 @@ public class AdminRestController {
         }
 
     }
+    
+   @PostMapping("/choosecitiesgym")
+    public String choosegymcities(@RequestParam String gid) {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from ownergym where ogcity='"+gid+"'");
+        return ans;
+    }
+    @PostMapping("/usergymdetails")
+    public String usergymdetails(@RequestParam String uid) {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from ownergym where id='"+uid+"'");
+        return ans;
+    }
+    
   }
 
 

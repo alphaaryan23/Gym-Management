@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 
-    <!-- Mirrored from expert-themes.com/html/gym/account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
+    <!-- Mirrored from expert-themes.com/html/gym/classes.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:00 GMT -->
     <head>
         <meta charset="utf-8">
-        <title>Admin Login</title>
+        <title>Choose Cities Gym</title>
         <!-- Stylesheets -->
         <link href="css/bootstrap.css" rel="stylesheet">
 
@@ -28,36 +28,69 @@
 
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-
         <script>
-            function login() {
-                var name = document.getElementById("naam").value;
-                var pass = document.getElementById("pass").value;
 
+            var urlParams = new URLSearchParams(window.location.search);
+            var gid = urlParams.get('id');
+
+            function choosegymcity() {
                 var formdata = new FormData();
-                formdata.append("name", name);
-                formdata.append("pass", pass);
-
-                var url = "/adminLogin";    
+                formdata.append("gid", gid);
+                var url = "/choosecitiesgym";
                 fetch(url, {method: "POST", body: formdata})
                         .then(response => response.text())
                         .then(ans => renderAsHtml(ans));
-            }
 
+            }
             function renderAsHtml(ans) {
-                console.log(ans)
-                if (ans === "success") {
-                     window.location.href="/ahome";
-                    alert(ans);
-                } else
-                {
-                    alert(ans);
+                console.log(ans);
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                console.log(arr);
+                var p = "";
+                p += ``;
+                for (var i = 0; i < arr.length; i++) {
+                    var ct = arr[i];
+                    p += `
+
+        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                                                <div class="inner-box">
+                                                        <div class="image">
+                                                                <a href="classes-detail.html"><img src="myuploads/${ct.ogphoto}" alt="" /></a>
+                                                                <div class="icon-box">
+                                                                        <span class="icon flaticon-tools-and-utensils-1"></span>
+                                                                </div>
+                                                        </div>
+
+        <div class="lower-content">
+                                                                <div class="title">City: ${ct.ogcity}</div>
+                                <h4><a href="classes-detail.html">${ct.gymname}</a></h4>
+                                <div class="text">${ct.Ameneties}</div>
+							
+                    <div class="btn-two-outer"> <button onclick="readmore(${ct.id})" class="theme-btn btn-style-two" type="submit" name="submit-form"><span class="txt">Read More</span></button></div>
+                                                        </div>
+                                                </div>
+                                        </div>`;
+
+
                 }
 
 
+                document.getElementById("cg1").innerHTML = p;
             }
-        </script>
+            function readmore(id)
+            {
+                window.location.href = "/usergymdetail?id=" + id;
+            }
 
+            document.addEventListener("DOMContentLoaded", function () {
+                choosegymcity();
+            });
+
+
+
+
+        </script>
     </head>
 
     <body class="hidden-bar-wrapper">
@@ -153,7 +186,7 @@
                                                 <li><a href="comming-soon.html">Comming Soon</a></li>
                                             </ul>
                                         </li>
-                                        <li class="dropdown"><a href="#">Classes</a>
+                                        <li class="current dropdown"><a href="#">Classes</a>
                                             <ul>
                                                 <li><a href="classes.html">Classes</a></li>
                                                 <li><a href="classes-detail.html">Classes Detail</a></li>
@@ -165,13 +198,13 @@
                                                 <li><a href="portfolio-detail.html">Portfolio Detail</a></li>
                                             </ul>
                                         </li>
-                                        <li class="current dropdown"><a href="#">Shop</a>
+                                        <li class="dropdown"><a href="#">Shop</a>
                                             <ul>
                                                 <li><a href="shop.html">Our Products</a></li>
                                                 <li><a href="shop-single.html">Product Single</a></li>
                                                 <li><a href="shopping-cart.html">Shopping Cart</a></li>
                                                 <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="Adminlogin.html">Account</a></li>
+                                                <li><a href="account.html">Account</a></li>
                                             </ul>
                                         </li>
                                         <li class="dropdown"><a href="#">Blog</a>
@@ -230,13 +263,13 @@
                 <div class="auto-container">
                     <div class="clearfix">
                         <div class="pull-left">
-                            <h2>Login / Register</h2>
+                            <h2>Our Classes</h2>
                             <div class="text">Fitness is not a destination it is a way of life.</div>
                         </div>
                         <div class="pull-right">
                             <ul class="page-breadcrumb">
                                 <li><a href="index-2.html">home</a></li>
-                                <li>Login / Register</li>
+                                <li>Classess</li>
                             </ul>
                         </div>
                     </div>
@@ -244,143 +277,145 @@
             </section>
             <!--End Page Title-->
 
-            <!-- Sidebar Cart Item -->
-            <div class="xs-sidebar-group info-group">
-                <div class="xs-overlay xs-bg-black"></div>
-                <div class="xs-sidebar-widget">
-                    <div class="sidebar-widget-container">
-                        <div class="widget-heading">
-                            <a href="#" class="close-side-widget">
-                                X
-                            </a>
-                        </div>
-                        <div class="sidebar-textwidget">
+            <!-- Classess Page Section -->
+            <section class="classess-page-section">
+                <div class="auto-container">
+                    <div class="row clearfix" id="cg1">
 
-                            <!-- Sidebar Info Content -->
-                            <div class="sidebar-info-contents">
-                                <div class="content-inner">
-                                    <div class="logo">
-                                        <a href="index-2.html"><img src="images/logo.png" alt="" /></a>
+                        <!-- Classess Block -->
+                        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box">
+                                <div class="image">
+                                    <a href="classes-detail.html"><img src="images/resource/feature-1.jpg" alt="" /></a>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-tools-and-utensils-1"></span>
                                     </div>
-                                    <div class="content-box">
-                                        <h2>About Us</h2>
-                                        <p class="text">The argument in favor of using filler text goes something like this: If you use real content in the Consulting Process, anytime you reach a review point you’ll end up reviewing and negotiating the content itself and not the design.</p>
-                                        <a href="#" class="theme-btn btn-style-two"><span class="txt">Consultation</span></a>
-                                    </div>
-                                    <div class="contact-info">
-                                        <h2>Contact Info</h2>
-                                        <ul class="list-style-one">
-                                            <li><span class="icon fa fa-location-arrow"></span>Chicago 12, Melborne City, USA</li>
-                                            <li><span class="icon fa fa-phone"></span>(111) 111-111-1111</li>
-                                            <li><span class="icon fa fa-envelope"></span>Gym@gmail.com</li>
-                                            <li><span class="icon fa fa-clock-o"></span>Week Days: 09.00 to 18.00 Sunday: Closed</li>
-                                        </ul>
-                                    </div>
-                                    <!-- Social Box -->
-                                    <ul class="social-box">
-                                        <li class="facebook"><a href="#" class="fa fa-facebook-f"></a></li>
-                                        <li class="twitter"><a href="#" class="fa fa-twitter"></a></li>
-                                        <li class="linkedin"><a href="#" class="fa fa-linkedin"></a></li>
-                                        <li class="instagram"><a href="#" class="fa fa-instagram"></a></li>
-                                        <li class="youtube"><a href="#" class="fa fa-youtube"></a></li>
-                                    </ul>
+                                </div>
+                                <div class="lower-content">
+                                    <div class="title">GYM</div>
+                                    <h4><a href="classes-detail.html">Psycho Training</a></h4>
+                                    <div class="text">Winning means you’re willing to go longer, work harder for more.</div>
+                                    <a class="read-more" href="classes-detail.html">Read More</a>
                                 </div>
                             </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END sidebar widget item -->
-
-
-            <!--Register Section-->
-            <section class="register-section">
-                <div class="auto-container">
-                    <div class="row clearfix">
-
-                        <!--Form Column-->
-                        <div class="form-column column col-lg-12 col-md-12 col-sm-12">
-
-                            <div class="sec-title">
-                                <h2>Login Now</h2>
-                                <div class="separate"></div>
-                            </div>
-
-                            <!--Login Form-->
-                            <div class="styled-form login-form">
-                                <form method="post" action="https://expert-themes.com/html/gym/index.html">
-                                    <div class="form-group">
-                                        <span class="adon-icon"><span class="fa fa-user"></span></span>
-                                        <input type="text" name="username" id="naam" value="" placeholder="Your Name *">
-                                    </div>
-                                    <!--                            <div class="form-group">
-                                                                    <span class="adon-icon"><span class="fa fa-envelope-o"></span></span>
-                                                                    <input type="email" name="useremil" id="em" value="" placeholder="Emai Address*">
-                                                                </div>-->
-                                    <div class="form-group">
-                                        <span class="adon-icon"><span class="fa fa-unlock-alt"></span></span>
-                                        <input type="password" name="userpassword" id="pass" value="" placeholder="Enter Password">
-                                    </div>
-                                    <div class="clearfix">
-                                        <div class="form-group pull-left">
-                                            <button type="button" class="theme-btn btn-style-three" onclick="login()"><span class="txt">Login Now</span></button>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="clearfix">
-                                        <div class="pull-left">
-                                            <input type="checkbox" id="remember-me"><label class="remember-me" for="remember-me">&nbsp; Remember Me</label>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-
                         </div>
 
-                        <!--                Form Column
-                                        <div class="form-column column col-lg-6 col-md-12 col-sm-12">
-                                        
-                                            <div class="sec-title">
-                                                <h2>Register Here</h2>
-                                                                        <div class="separate"></div>
-                                            </div>
-                                            
-                                            Login Form
-                                            <div class="styled-form register-form">
-                                                <form method="post" action="https://expert-themes.com/html/gym/index.html">
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-user"></span></span>
-                                                        <input type="text" name="username" value="" placeholder="Your Name *">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-envelope-o"></span></span>
-                                                        <input type="email" name="useremil" value="" placeholder="Emai Address*">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-unlock-alt"></span></span>
-                                                        <input type="password" name="userpassword" value="" placeholder="Enter Password">
-                                                    </div>
-                                                    <div class="clearfix">
-                                                        <div class="form-group pull-left">
-                                                            <button type="button" class="theme-btn btn-style-three"><span class="txt">Register here</span></button>
-                                                        </div>
-                                                        <div class="form-group submit-text pull-right">
-                                                                * You must be a free registered to submit content.
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </form>
-                                            </div>
-                                            
-                                        </div>
-                        -->
+                        <!-- Classess Block -->
+                        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box">
+                                <div class="image">
+                                    <a href="classes-detail.html"><img src="images/resource/feature-2.jpg" alt="" /></a>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-muscle"></span>
+                                    </div>
+                                </div>
+                                <div class="lower-content">
+                                    <div class="title">CARDIO</div>
+                                    <h4><a href="classes-detail.html">Self Defence</a></h4>
+                                    <div class="text">Don’t practice until you get it right practice until can’t wrong</div>
+                                    <a class="read-more" href="classes-detail.html">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Classess Block -->
+                        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box">
+                                <div class="image">
+                                    <a href="classes-detail.html"><img src="images/resource/feature-3.jpg" alt="" /></a>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-people"></span>
+                                    </div>
+                                </div>
+                                <div class="lower-content">
+                                    <div class="title">Fitness</div>
+                                    <h4><a href="classes-detail.html">FITNESS FOR MAN</a></h4>
+                                    <div class="text">Winning means you’re willing to go longer, work harder for more.</div>
+                                    <a class="read-more" href="classes-detail.html">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Classess Block -->
+                        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box">
+                                <div class="image">
+                                    <a href="classes-detail.html"><img src="images/resource/feature-4.jpg" alt="" /></a>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-fitness"></span>
+                                    </div>
+                                </div>
+                                <div class="lower-content">
+                                    <div class="title">STRENGTH</div>
+                                    <h4><a href="classes-detail.html">Strength Training</a></h4>
+                                    <div class="text">Winning means you’re willing to go longer, work harder for more.</div>
+                                    <a class="read-more" href="classes-detail.html">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Classess Block -->
+                        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box">
+                                <div class="image">
+                                    <a href="classes-detail.html"><img src="images/resource/feature-5.jpg" alt="" /></a>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-machine"></span>
+                                    </div>
+                                </div>
+                                <div class="lower-content">
+                                    <div class="title">CARDIO</div>
+                                    <h4><a href="classes-detail.html">Cardio For Man</a></h4>
+                                    <div class="text">Don’t practice until you get it right practice until can’t wrong</div>
+                                    <a class="read-more" href="classes-detail.html">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Classess Block -->
+                        <div class="classess-block col-lg-4 col-md-6 col-sm-12">
+                            <div class="inner-box">
+                                <div class="image">
+                                    <a href="classes-detail.html"><img src="images/resource/feature-6.jpg" alt="" /></a>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-gym"></span>
+                                    </div>
+                                </div>
+                                <div class="lower-content">
+                                    <div class="title">Nutrition</div>
+                                    <h4><a href="classes-detail.html">Advance GYM</a></h4>
+                                    <div class="text">Winning means you’re willing to go longer, work harder for more.</div>
+                                    <a class="read-more" href="classes-detail.html">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>
-            <!--End Register Section-->
+            <!-- End Classess Page Section -->
+
+            <!-- Clients Section -->
+            <section class="clients-section style-two">
+                <div class="auto-container">
+
+                    <div class="sponsors-outer">
+                        <!--Sponsors Carousel-->
+                        <ul class="sponsors-carousel owl-carousel owl-theme">
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/1.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/2.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/3.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/4.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/5.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/1.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/2.png" alt=""></a></figure></li>
+                            <li class="slide-item"><figure class="image-box"><a href="#"><img src="images/clients/3.png" alt=""></a></figure></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+            <!-- End Clients Section -->
 
             <!-- Subscribe Section -->
             <section class="subscribe-section">
@@ -517,11 +552,59 @@
                 </div>
             </footer>
 
+            <!-- Sidebar Cart Item -->
+            <div class="xs-sidebar-group info-group">
+                <div class="xs-overlay xs-bg-black"></div>
+                <div class="xs-sidebar-widget">
+                    <div class="sidebar-widget-container">
+                        <div class="widget-heading">
+                            <a href="#" class="close-side-widget">
+                                X
+                            </a>
+                        </div>
+                        <div class="sidebar-textwidget">
+
+                            <!-- Sidebar Info Content -->
+                            <div class="sidebar-info-contents">
+                                <div class="content-inner">
+                                    <div class="logo">
+                                        <a href="index-2.html"><img src="images/logo.png" alt="" /></a>
+                                    </div>
+                                    <div class="content-box">
+                                        <h2>About Us</h2>
+                                        <p class="text">The argument in favor of using filler text goes something like this: If you use real content in the Consulting Process, anytime you reach a review point you’ll end up reviewing and negotiating the content itself and not the design.</p>
+                                        <a href="#" class="theme-btn btn-style-two"><span class="txt">Consultation</span></a>
+                                    </div>
+                                    <div class="contact-info">
+                                        <h2>Contact Info</h2>
+                                        <ul class="list-style-one">
+                                            <li><span class="icon fa fa-location-arrow"></span>Chicago 12, Melborne City, USA</li>
+                                            <li><span class="icon fa fa-phone"></span>(111) 111-111-1111</li>
+                                            <li><span class="icon fa fa-envelope"></span>Gym@gmail.com</li>
+                                            <li><span class="icon fa fa-clock-o"></span>Week Days: 09.00 to 18.00 Sunday: Closed</li>
+                                        </ul>
+                                    </div>
+                                    <!-- Social Box -->
+                                    <ul class="social-box">
+                                        <li class="facebook"><a href="#" class="fa fa-facebook-f"></a></li>
+                                        <li class="twitter"><a href="#" class="fa fa-twitter"></a></li>
+                                        <li class="linkedin"><a href="#" class="fa fa-linkedin"></a></li>
+                                        <li class="instagram"><a href="#" class="fa fa-instagram"></a></li>
+                                        <li class="youtube"><a href="#" class="fa fa-youtube"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END sidebar widget item -->
+
         </div>
         <!--End pagewrapper-->
 
         <!-- Color Palate / Color Switcher -->
-
         <div class="color-palate">
             <div class="color-trigger">
                 <i class="fa fa-gear"></i>
@@ -570,6 +653,7 @@
         <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-arrow-up"></span></div>
 
         <script src="js/jquery.js"></script>
+
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -579,7 +663,6 @@
         <script src="js/tilt.jquery.min.js"></script>
         <script src="js/jquery.paroller.min.js"></script>
         <script src="js/owl.js"></script>
-        <script src="js/mixitup.js"></script>
         <script src="js/wow.js"></script>
         <script src="js/nav-tool.js"></script>
         <script src="js/jquery-ui.js"></script>
@@ -588,5 +671,5 @@
 
     </body>
 
-    <!-- Mirrored from expert-themes.com/html/gym/account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
+    <!-- Mirrored from expert-themes.com/html/gym/classes.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:01 GMT -->
 </html>
