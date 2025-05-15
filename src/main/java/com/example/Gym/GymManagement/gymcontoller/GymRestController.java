@@ -116,6 +116,7 @@ public class GymRestController {
              @RequestParam String latitude,
              @RequestParam String longitude,
              @RequestParam String ameneties,
+              @RequestParam String description,
              @RequestParam String myDropdown,
              @RequestParam MultipartFile photo) {
 
@@ -141,6 +142,7 @@ public class GymRestController {
                 rs.updateString("latitude", latitude);
                 rs.updateString("longitude", longitude);
                 rs.updateString("Ameneties", ameneties);
+                rs.updateString("Ameneties", description);
                 rs.updateString("ogphoto", orgName);
 
                 Integer s = (Integer) session.getAttribute("id");
@@ -216,6 +218,8 @@ public class GymRestController {
         String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where gid='"+id+"'");
         return ans;
     }
+    
+    
     
     @PostMapping("/deletePackage")
     public String deletePackage(@RequestParam String id) {
@@ -312,5 +316,10 @@ public class GymRestController {
             ex.printStackTrace();
             return ex.toString();
         }
+    }
+      @PostMapping("/showgympack")
+    public String showgympack(@RequestParam String sgpid) {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where id='"+sgpid+"'");
+        return ans;
     }
 }

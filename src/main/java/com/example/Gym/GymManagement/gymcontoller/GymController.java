@@ -50,4 +50,10 @@ public class GymController {
     {
         return "/EditOwnerDetails";
     }
+     @GetMapping("/usershowgympackage")
+    public String usershowgympackage()
+       
+    {
+        return "/UserShowGymPackage";
+    }
 }

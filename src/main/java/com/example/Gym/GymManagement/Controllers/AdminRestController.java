@@ -149,8 +149,8 @@ public class AdminRestController {
         return ans;
     }
     @PostMapping("/usergymdetails")
-    public String usergymdetails(@RequestParam String uid) {
-        String ans = new RDBMS_TO_JSON().generateJSON("select * from ownergym where id='"+uid+"'");
+    public String usergymdetails(@RequestParam String sgpid) {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where id='"+sgpid+"'");
         return ans;
     }
     

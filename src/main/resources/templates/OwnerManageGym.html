@@ -25,6 +25,8 @@
         <!-- Responsive -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
@@ -81,7 +83,44 @@
             .theme-btn.btn-style-three:hover {
                 background-color: #e55a5a;
             }
-        </style>
+           
+    table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table td, .table th {
+        vertical-align: middle;
+        padding: 15px;
+        font-size: 15px;
+    }
+
+    .table img {
+        border-radius: 8px;
+        width: 100px;
+        height: auto;
+        object-fit: cover;
+    }
+
+    button.btn {
+        width: 100px;
+        font-weight: 500;
+    }
+
+    td.description {
+        max-width: 250px;
+        overflow-y: auto;
+        white-space: normal;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #2b2b2b;
+        transform: scale(1.01);
+        transition: 0.2s ease-in-out;
+    }
+</style>
+
+       
 
 
         <script>
@@ -94,6 +133,7 @@
                 var latitude = document.getElementById("latitude").value;
                 var longitude = document.getElementById("longitude").value;
                 var ameneties = document.getElementById("ameneties").value;
+                var description = document.getElementById("description").value;
                 var photo = document.getElementById("photo").files[0];
 
                 var formdata = new FormData();
@@ -103,6 +143,7 @@
                 formdata.append("latitude", latitude);
                 formdata.append("longitude", longitude);
                 formdata.append("ameneties", ameneties);
+                 formdata.append("description", description);
                 formdata.append("photo", photo);
 
                 var url = "/ownermanagegym";
@@ -155,47 +196,51 @@
                         .then(response => response.text())
                         .then(ans => renderGyms(ans));
             }
-            function renderGyms(ans) {
-                console.log(ans);
-                var mainobj = JSON.parse(ans);
-                var arr = mainobj["ans"];
-                var g = "";
-                g += `<h4 class="mt-5">Gym Details Table</h4>
-               <table class="table table-bordered table-striped mt-3">
-               <thead class="thead-dark">
-               <tr>
-                <th>Gym Name</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Amenities</th>
-                <th>Photo</th>
-                <th>Action</th>
-                <th>Package</th>
-            </tr>
-        </thead>
-        <tbody>`;
-                for (var i = 0; i < arr.length; i++) {
-                    var gym = arr[i];
-                    g += `<tr>
-            <td>${gym.gymname}</td>
-            <td>${gym.Address}</td>
-            <td>${gym.ogcity}</td> 
-            <td>${gym.latitude}</td>
-            <td>${gym.longitude}</td>
-            <td>${gym.Ameneties}</td>
-            <td><img src="myuploads/${gym.ogphoto}"alt="Owner Photo" width="80"/></td>
-             
-             <td><button class="btn btn-danger" onclick="deleteGym(${gym.id})">Delete</button></td>
-            <td><form"><button onclick="pkg(${gym.id})" type="submit" class="btn btn-primary" onclick="">Package</button></form></td>
-        </tr>`;
-                }
-                g += `</tbody></table>`;
-                
-                document.getElementById("g1").innerHTML=g;
-            }
-             
+           function renderGyms(ans) {
+        console.log(ans);
+        var mainobj = JSON.parse(ans);
+        var arr = mainobj["ans"];
+        var g = "";
+        g += `<h4 class="mt-5 text-light">Gym Details Table</h4>
+        <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover table-dark align-middle text-center shadow mt-3">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Gym Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Amenities</th>
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <th>Action</th>
+                    <th>Package</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        for (var i = 0; i < arr.length; i++) {
+            var gym = arr[i];
+            var amenitiesArr = gym.Ameneties.split(',').map(a => `<span class="badge bg-success mx-1">${a.trim()}</span>`).join('');
+
+            g += `<tr>
+                <td>${gym.gymname}</td>
+                <td>${gym.Address}</td>
+                <td>${gym.ogcity}</td>
+                <td>${gym.latitude}</td>
+                <td>${gym.longitude}</td>
+                <td>${amenitiesArr}</td>
+                <td class="description">${gym.ogdesc}</td>
+                <td><img src="myuploads/${gym.ogphoto}" alt="Gym Photo"/></td>
+                <td><button class="btn btn-danger" onclick="deleteGym(${gym.id})">Delete</button></td>
+                <td><button onclick="pkg(${gym.id})" class="btn btn-primary">Package</button></td>
+            </tr>`;
+        }
+
+        g += `</tbody></table></div>`;
+        document.getElementById("g1").innerHTML = g;
+    }
              function pkg(id)
              {
                  window.location.href="/packageTable?id="+id;
@@ -506,6 +551,10 @@
                                     <div class="form-group col-12">
                                         <label>Amenities</label>
                                         <textarea name="amenities" id="ameneties" rows="4" placeholder="e.g., abc, def, ghi " class="form-control"></textarea>
+                                    </div>
+<div class="form-group col-12">
+                                        <label>Description</label>
+                                        <textarea name="description" id="description" rows="4" placeholder=" " class="form-control"></textarea>
                                     </div>
 
 
