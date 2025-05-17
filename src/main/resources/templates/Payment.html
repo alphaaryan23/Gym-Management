@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 
-    <!-- Mirrored from expert-themes.com/html/gym/account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
+    <!-- Mirrored from expert-themes.com/html/gym/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
     <head>
         <meta charset="utf-8">
-        <title>Admin Login</title>
+        <title>Payment</title>
         <!-- Stylesheets -->
         <link href="css/bootstrap.css" rel="stylesheet">
 
@@ -28,53 +28,131 @@
 
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    function login() {
-        var name = document.getElementById("naam").value;
-        var pass = document.getElementById("pass").value;
+        
+        <!--payment start-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="js/Razorpay.js" type="text/javascript"></script>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <!--payment end-->
 
-        if (!name || !pass) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Empty Fields',
-                text: 'Please fill in both username and password.'
-            });
-        } else {
-            var formdata = new FormData();
-            formdata.append("name", name);
-            formdata.append("pass", pass);
+        <!--payment script start-->
+        <script>
 
-            var url = "/adminLogin";
-            fetch(url, { method: "POST", body: formdata })
-                .then(response => response.text())
-                .then(ans => renderAsHtml(ans));
-        }
-    }
 
-    function renderAsHtml(ans) {
+            function paymentlogic()
+            {
+
+                var options = {
+                    "key": "rzp_test_96HeaVmgRvbrfT",
+                    "amount": ppid + "00",
+                    "name": "JC PawfectCare",
+                    "description": "",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOmghn1er2yRA0yXfMRmroSSpWEdAGNV5KHg&usqp=CAU",
+                    "handler": function (response) {
+
+                        if (response.razorpay_payment_id == "" || response.razorpay_payment_id == undefined) {
+
+                            window.location.href = "payment_action?status=failed";
+                            // paymentfail(authormobile,"Payment failed!");
+
+                            alert("Payment Failed")
+
+                        } else {
+                            //success
+                            bookingPayment();
+                            //payment success
+                            //call your book payment function here
+                        }
+                    },
+                    "prefill": {
+                        "name": "HealHub ",
+                        "email": ""
+                    },
+                    "notes": {
+                        "address": ""
+                    },
+                    "theme": {
+                        "color": "#F37254"
+                    },
+                    "modal": {
+                        "ondismiss": function () {
+                            $("#statusmodal").modal("show");
+                            document.getElementById("status").innerHTML = "Payment failed ! Try again";
+                        }
+                    }
+                };
+
+
+
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
+                    console.log("a2");
+                    console.log(response.error.code);
+
+                    alert("Payment Failed");
+
+
+                    // paymentfail(authormobile,"Payment failed!");
+                    // rzp1.close();
+                    // alert(response.error.code);
+                    // alert(response.error.description);
+                    // alert(response.error.source);
+                    // alert(response.error.step);
+                    // alert(response.error.reason);
+                    // alert(response.error.metadata.order_id);
+                    // alert(response.error.metadata.payment_id);
+
+                });
+                rzp1.open();
+            }
+
+        </script>    
+        <!--payemnt script end-->
+        
+        
+        
+        <script>
+            var urlParams = new URLSearchParams(window.location.search);
+            var pid = urlParams.get('packid');
+            var sid = urlParams.get('startdate');
+            var eid = urlParams.get('enddate');
+            var ppid = urlParams.get('price');
+
+            function bookingPayment() {
+                var formdata = new FormData();
+                formdata.append("pid", pid);
+                formdata.append("sid", sid);
+                formdata.append("eid", eid);
+                formdata.append("ppid", ppid);
+                var url = "/bookingpayment";
+                fetch(url, {method: "POST", body: formdata})
+                        .then(response => response.text())
+                        .then(ans => renderAsHtml(ans));
+            }
+            function renderAsHtml(ans) {
         console.log(ans);
         if (ans === "success") {
             Swal.fire({
                 icon: 'success',
-                title: 'Login Successful',
-                text: 'Welcome to Admin Panel!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "/ahome";
-                }
+                title: 'Payment Successful',
+                text: 'Your booking has been confirmed!'
+            }).then(() => {
+                window.location.href = "/userbookinghistory";
             });
         } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Login Failed',
-                text: 'Invalid credentials. Please try again.'
+                title: 'Payment Failed',
+                text: 'Something went wrong with the booking. Please try again.'
             });
         }
     }
-</script>
-
+        </script>
     </head>
 
     <body class="hidden-bar-wrapper">
@@ -188,7 +266,7 @@
                                                 <li><a href="shop-single.html">Product Single</a></li>
                                                 <li><a href="shopping-cart.html">Shopping Cart</a></li>
                                                 <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="Adminlogin.html">Account</a></li>
+                                                <li><a href="account.html">Account</a></li>
                                             </ul>
                                         </li>
                                         <li class="dropdown"><a href="#">Blog</a>
@@ -247,13 +325,13 @@
                 <div class="auto-container">
                     <div class="clearfix">
                         <div class="pull-left">
-                            <h2>Login / Register</h2>
-                            <div class="text">Fitness is not a destination it is a way of life.</div>
+                            <h2>Payment</h2>
+                            <div class="text">Invest in yourself—because your health is worth every penny</div>
                         </div>
                         <div class="pull-right">
                             <ul class="page-breadcrumb">
-                                <li><a href="index-2.html">home</a></li>
-                                <li>Login / Register</li>
+                                <li><a href="index-2.html">Home</a></li>
+                                <li>Payment</li>
                             </ul>
                         </div>
                     </div>
@@ -261,143 +339,21 @@
             </section>
             <!--End Page Title-->
 
-            <!-- Sidebar Cart Item -->
-            <div class="xs-sidebar-group info-group">
-                <div class="xs-overlay xs-bg-black"></div>
-                <div class="xs-sidebar-widget">
-                    <div class="sidebar-widget-container">
-                        <div class="widget-heading">
-                            <a href="#" class="close-side-widget">
-                                X
-                            </a>
-                        </div>
-                        <div class="sidebar-textwidget">
-
-                            <!-- Sidebar Info Content -->
-                            <div class="sidebar-info-contents">
-                                <div class="content-inner">
-                                    <div class="logo">
-                                        <a href="index-2.html"><img src="images/logo.png" alt="" /></a>
-                                    </div>
-                                    <div class="content-box">
-                                        <h2>About Us</h2>
-                                        <p class="text">The argument in favor of using filler text goes something like this: If you use real content in the Consulting Process, anytime you reach a review point you’ll end up reviewing and negotiating the content itself and not the design.</p>
-                                        <a href="#" class="theme-btn btn-style-two"><span class="txt">Consultation</span></a>
-                                    </div>
-                                    <div class="contact-info">
-                                        <h2>Contact Info</h2>
-                                        <ul class="list-style-one">
-                                            <li><span class="icon fa fa-location-arrow"></span>Chicago 12, Melborne City, USA</li>
-                                            <li><span class="icon fa fa-phone"></span>(111) 111-111-1111</li>
-                                            <li><span class="icon fa fa-envelope"></span>Gym@gmail.com</li>
-                                            <li><span class="icon fa fa-clock-o"></span>Week Days: 09.00 to 18.00 Sunday: Closed</li>
-                                        </ul>
-                                    </div>
-                                    <!-- Social Box -->
-                                    <ul class="social-box">
-                                        <li class="facebook"><a href="#" class="fa fa-facebook-f"></a></li>
-                                        <li class="twitter"><a href="#" class="fa fa-twitter"></a></li>
-                                        <li class="linkedin"><a href="#" class="fa fa-linkedin"></a></li>
-                                        <li class="instagram"><a href="#" class="fa fa-instagram"></a></li>
-                                        <li class="youtube"><a href="#" class="fa fa-youtube"></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END sidebar widget item -->
-
-
-            <!--Register Section-->
-            <section class="register-section">
+            <!--Cart Section-->
+            <section class="cart-section">
                 <div class="auto-container">
-                    <div class="row clearfix">
 
-                        <!--Form Column-->
-                        <div class="form-column column col-lg-12 col-md-12 col-sm-12">
-
-                            <div class="sec-title">
-                                <h2>Login Now</h2>
-                                <div class="separate"></div>
-                            </div>
-
-                            <!--Login Form-->
-                            <div class="styled-form login-form">
-                                <form method="post" action="https://expert-themes.com/html/gym/index.html">
-                                    <div class="form-group">
-                                        <span class="adon-icon"><span class="fa fa-user"></span></span>
-                                        <input type="text" name="username" id="naam" value="" placeholder="Your Name *">
-                                    </div>
-                                    <!--                            <div class="form-group">
-                                                                    <span class="adon-icon"><span class="fa fa-envelope-o"></span></span>
-                                                                    <input type="email" name="useremil" id="em" value="" placeholder="Emai Address*">
-                                                                </div>-->
-                                    <div class="form-group">
-                                        <span class="adon-icon"><span class="fa fa-unlock-alt"></span></span>
-                                        <input type="password" name="userpassword" id="pass" value="" placeholder="Enter Password">
-                                    </div>
-                                    <div class="clearfix">
-                                        <div class="form-group pull-left">
-                                            <button type="button" class="theme-btn btn-style-three" onclick="login()"><span class="txt">Login Now</span></button>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="clearfix">
-                                        <div class="pull-left">
-                                            <input type="checkbox" id="remember-me"><label class="remember-me" for="remember-me">&nbsp; Remember Me</label>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                        </div>
-
-                        <!--                Form Column
-                                        <div class="form-column column col-lg-6 col-md-12 col-sm-12">
-                                        
-                                            <div class="sec-title">
-                                                <h2>Register Here</h2>
-                                                                        <div class="separate"></div>
-                                            </div>
-                                            
-                                            Login Form
-                                            <div class="styled-form register-form">
-                                                <form method="post" action="https://expert-themes.com/html/gym/index.html">
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-user"></span></span>
-                                                        <input type="text" name="username" value="" placeholder="Your Name *">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-envelope-o"></span></span>
-                                                        <input type="email" name="useremil" value="" placeholder="Emai Address*">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <span class="adon-icon"><span class="fa fa-unlock-alt"></span></span>
-                                                        <input type="password" name="userpassword" value="" placeholder="Enter Password">
-                                                    </div>
-                                                    <div class="clearfix">
-                                                        <div class="form-group pull-left">
-                                                            <button type="button" class="theme-btn btn-style-three"><span class="txt">Register here</span></button>
-                                                        </div>
-                                                        <div class="form-group submit-text pull-right">
-                                                                * You must be a free registered to submit content.
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </form>
-                                            </div>
-                                            
-                                        </div>
-                        -->
+                    <div class="btn-one-outer" style="display: flex; justify-content: center; margin-top: 40px;">
+                        <button class="theme-btn btn-style-one" onclick="paymentlogic()" style="font-size: 20px; padding: 15px 40px; display: inline-block;">
+                            <span class="txt">PAYMENT</span>
+                        </button>
                     </div>
+
                 </div>
             </section>
-            <!--End Register Section-->
+
+
+
 
             <!-- Subscribe Section -->
             <section class="subscribe-section">
@@ -592,12 +548,10 @@
         <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
         <script src="js/jquery.fancybox.js"></script>
         <script src="js/appear.js"></script>
-        <script src="js/parallax.min.js"></script>
-        <script src="js/tilt.jquery.min.js"></script>
-        <script src="js/jquery.paroller.min.js"></script>
+        <script src="js/jquery.bootstrap-touchspin.js"></script>
         <script src="js/owl.js"></script>
-        <script src="js/mixitup.js"></script>
         <script src="js/wow.js"></script>
+        <script src="js/jquery-ui.js"></script>
         <script src="js/nav-tool.js"></script>
         <script src="js/jquery-ui.js"></script>
         <script src="js/script.js"></script>
@@ -605,5 +559,5 @@
 
     </body>
 
-    <!-- Mirrored from expert-themes.com/html/gym/account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
+    <!-- Mirrored from expert-themes.com/html/gym/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 15 Apr 2025 10:33:14 GMT -->
 </html>

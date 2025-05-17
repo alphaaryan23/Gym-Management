@@ -28,73 +28,77 @@
 
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-        <script>
-            function signup() {
-                alert("signup called");
-                var name = document.getElementById("oname").value;
-                var pass = document.getElementById("opassword").value;
-                var email = document.getElementById("oemail").value;
-                var city = document.getElementById("myDropdown").value;
-                var franchise = document.getElementById("franchise").value;
-                var photo = document.getElementById("ophoto").files[0];
-               
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                var formdata = new FormData();
-                formdata.append("name", name);
-                formdata.append("pass", pass);
-                formdata.append("email", email);
-                formdata.append("city", city);
-                formdata.append("franchise", franchise);
-                formdata.append("photo", photo);
+       <script>
+    function signup() {
+        var name = document.getElementById("oname").value;
+        var pass = document.getElementById("opassword").value;
+        var email = document.getElementById("oemail").value;
+        var city = document.getElementById("myDropdown").value;
+        var franchise = document.getElementById("franchise").value;
+        var photo = document.getElementById("ophoto").files[0];
 
-                var url = "/ownersignup";
-                fetch(url, {method: "POST", body: formdata})
-                        .then(response => response.text())
-                        .then(ans => renderAsHtml(ans));
-            }
-           
-            function renderAsHtml(ans) {
-                console.log(ans)
-                if (ans === "success") {
-                    alert("Signup Successful!");
-                } else if (ans === "exists") {
-                    alert("Email already registered!");
-                } else {
-                    alert("Something went wrong: " + ans);
-                }
-
-            }
-            
-            
-            function getcities()
-            {
-                var url="/getcities";
-                fetch(url)
-                        .then(response =>response.text())
-                        .then(ans => renderAsHtml1(ans));
-
-    }
-    
-    function renderAsHtml1(ans)
-    {
-        
-        var mainobj=JSON.parse(ans);
-        var arr=mainobj["ans"];
-         var a=`<select id="myDropdown" name="myDropdown" class="form-select">`;
-         a +=` <option selected disabled>-- Select a city --</option>`;
-        for(var i=0;i<arr.length;i++)
-        {
-            var ct=arr[i];
-             a+=`<option value="${ct.id}">${ct.cname}</option>`;
-             
-            
+        // ✅ Check for empty fields
+        if (!name || !pass || !email || !city || !franchise || !photo) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty Fields',
+                text: 'Please fill out all the fields before signing up.'
+            });
+            return;
         }
-        a +=` </select>`;
-        document.getElementById("cd1").innerHTML=a;
-        
-        
+
+        var formdata = new FormData();
+        formdata.append("name", name);
+        formdata.append("pass", pass);
+        formdata.append("email", email);
+        formdata.append("city", city);
+        formdata.append("franchise", franchise);
+        formdata.append("photo", photo);
+
+        var url = "/ownersignup";
+        fetch(url, { method: "POST", body: formdata })
+            .then(response => response.text())
+            .then(ans => renderAsHtml(ans));
     }
-        </script>
+
+    function renderAsHtml(ans) {
+        console.log(ans);
+        if (ans === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Signup Successful!',
+                text: 'Welcome onboard!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/ownerlogin";
+                }
+            });
+        }
+    }
+
+    function getcities() {
+        var url = "/getcities";
+        fetch(url)
+            .then(response => response.text())
+            .then(ans => renderAsHtml1(ans));
+    }
+
+    function renderAsHtml1(ans) {
+        var mainobj = JSON.parse(ans);
+        var arr = mainobj["ans"];
+        var a = `<select id="myDropdown" name="myDropdown" class="form-select">`;
+        a += `<option selected disabled>-- Select a city --</option>`;
+        for (var i = 0; i < arr.length; i++) {
+            var ct = arr[i];
+            a += `<option value="${ct.id}">${ct.cname}</option>`;
+        }
+        a += `</select>`;
+        document.getElementById("cd1").innerHTML = a;
+    }
+</script>
+
     </head>
 
     <body class="hidden-bar-wrapper" onload="getcities()">

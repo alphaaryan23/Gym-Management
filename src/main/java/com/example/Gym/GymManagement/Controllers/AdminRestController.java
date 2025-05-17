@@ -125,13 +125,14 @@ public class AdminRestController {
         }
     }
    @PostMapping("/userlogin")
-    public String userlogin(@RequestParam String email, @RequestParam String pass) {
+    public String userlogin(@RequestParam String email, @RequestParam String pass, HttpSession session) {
         try {
             System.out.println("useremail " + email);
             System.out.println("userpassword " + pass);
             ResultSet rs = DbLoader.executeQuery("Select * from  usersignup where useremail = '" + email + "' and userpassword = '" + pass + "' ");
             if (rs.next()) {
 //                session.setAttribute("id", rs.getInt("id"));
+                session.setAttribute("useremail", email);
                 return "success";
             } else {
                 return "failed";
@@ -149,11 +150,16 @@ public class AdminRestController {
         return ans;
     }
     @PostMapping("/usergymdetails")
-    public String usergymdetails(@RequestParam String sgpid) {
-        String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where id='"+sgpid+"'");
+    public String usergymdetails(@RequestParam String uid) {
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from ownergym where id='"+uid+"'");
         return ans;
     }
-    
+     @PostMapping("/checkbookinghistory")
+    public String checkbookinghistory(HttpSession session) {
+        String useremail = (String) session.getAttribute("useremail");
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from paymenttable where useremail='"+useremail+"'");
+        return ans;
+    }
   }
 
 

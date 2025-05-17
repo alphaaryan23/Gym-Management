@@ -26,8 +26,29 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
+        <style>
+            /* Completely remove borders and pseudo-elements from info-list items */
+            .info-list {
+                border: none !important;
+                list-style: none !important;
+                padding-left: 0 !important;
+                margin-left: 0 !important;
+            }
+
+            .info-list li {
+                border: none !important;
+                position: relative;
+            }
+
+            .info-list li::before {
+                content: none !important;
+                display: none !important;
+            }
+        </style>
         <script>
             var urlParams = new URLSearchParams(window.location.search);
             var sgpid = urlParams.get('id');
@@ -55,7 +76,7 @@
                 var inclusionHTML = ' <ul class="info-list">';
                 for (var i = 0; i < inclusionList.length; i++) {
                     var inclusion = inclusionList[i].trim();
-                    inclusionHTML += `<li>${inclusion}</li>`;
+                    inclusionHTML += `<li>&#8226;${inclusion}</li>`;
                 }
                 inclusionHTML += '</ul>';
 
@@ -77,23 +98,46 @@
                         .then(response => response.text())
                         .then(ans => renderPackage(ans));
             }
+
+            var duration = 0;
+            var packid = 0;
+            var price = 0;
             function renderPackage(ans) {
                 console.log(ans);
                 var mainobj = JSON.parse(ans);
                 var arr = mainobj["ans"];
 
+                duration = arr[0].duration;
+                packid = arr[0].id;
+                price = arr[0].pprice;
 
                 document.getElementById("pduration").innerHTML = "<span >Package Duration</span>" + arr[0].duration;
                 document.getElementById("pname").innerHTML = "<span >Package Name</span>" + arr[0].pname;
                 document.getElementById("pprice").innerHTML = "<span >Package Price</span>" + arr[0].pprice;
                 document.getElementById("pdiscount").innerHTML = "<span >Package Price</span>" + arr[0].offerprice;
+                document.getElementById("duration").innerHTML = "<strong >Package Duration:</strong>" + arr[0].duration;
             }
             document.addEventListener("DOMContentLoaded", function () {
                 usershowgympackage();
                 getpackagedetails();
 
             });
+
+
+            function paymentForm()
+            {
+                var startdate = document.getElementById("choosedate").innerHTML;
+                var enddate = document.getElementById("enddate").innerHTML;
+                window.location.href = "/payment?packid=" + packid + "&startdate=" + startdate + "&enddate=" + enddate + "&price=" + price
+            }
         </script>
+
+
+
+
+
+
+
     </head>
 
     <body class="hidden-bar-wrapper">
@@ -289,27 +333,19 @@
 
                                     <!-- Start Date -->
                                     <label for="startDate" style="margin-top: 20px;">Choose Start Date:</label>
-                                    <input type="date" id="startDate" class="form-control" style="padding: 10px; margin-top: 8px; border-radius: 5px; border: none;">
-
-<!--                                     Time Slot 
-                                    <label for="timeSlot" style="margin-top: 20px;">Select Time Slot:</label>
-                                    <select id="timeSlot" class="form-control" style="padding: 10px; margin-top: 8px; border-radius: 5px; border: none;">
-                                        <option>6:00 AM - 7:00 AM</option>
-                                        <option>7:00 AM - 8:00 AM</option>
-                                        <option>8:00 AM - 9:00 AM</option>
-                                        <option>5:00 PM - 6:00 PM</option>
-                                        <option>6:00 PM - 7:00 PM</option>
-                                        <option>7:00 PM - 8:00 PM</option>
-                                    </select>-->
+                                    <input style="padding: 10px; margin-top: 8px; border-radius: 5px; border: none;" class="form-control" onchange="getEndDate()" id="datepicker">
+                                    <!--<input type="date" id="startDate" class="form-control" style="padding: 10px; margin-top: 8px; border-radius: 5px; border: none;">-->
 
                                     <!-- Duration & End Date -->
                                     <div style="margin-top: 20px; background-color: #262626; padding: 15px; border-radius: 5px;">
-                                        <p><strong>Package Duration:</strong> 70 days</p>
-                                         <p><strong>Start Date:</strong> <span id="endDate">--</span></p>
-                                        <p><strong>End Date:</strong> <span id="endDate">--</span></p>
+                                        <p ><strong ></strong><span id="duration"></span> </p>
+                                        <p><strong>Start Date:</strong> <span id="choosedate">--</span></p>
+                                        <p><strong>End Date:</strong> <span id="enddate">--</span></p>
                                     </div>
                                 </div>
+                                <div class="btn-one-outer"><a class="theme-btn btn-style-one" onclick="paymentForm()"  ><span class="txt">PAYMENT</span></a></div>
                             </div>
+
 
 
                             <!-- More Posts -->
@@ -327,68 +363,8 @@
             </section>
             <!-- End Portfolio Detail Section -->
 
-            <!--	 Pricing Section 
-                    <section class="pricing-section">
-                            <div class="auto-container">
-                                     Sec Title 
-                                    <div class="sec-title centered">
-                                            <div class="title">Time Table</div>
-                                            <h2>Working housr <br> & Classes</h2>
-                                    </div>
-                                    <div class="row clearfix">
-                                            
-                                             Pricing Block 
-                                            <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
-                                                    <div class="inner-box" style="background-image:url(images/resource/price-1.jpg)">
-                                                            <h4>Basic Plan</h4>
-                                                            <div class="title">Here Goes Some Descripation</div>
-                                                            <div class="price">For 1 Month<span>$99</span></div>
-                                                            <ul class="price-list">
-                                                                    <li>Free Hand</li>
-                                                                    <li>Gym Fitness</li>
-                                                                    <li>Weight Loss</li>
-                                                                    <li>Personal Trainer</li>
-                                                            </ul>
-                                                            <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one" type="submit"><span class="txt">Select Now</span></a></div>
-                                                    </div>
-                                            </div>
-                                            
-                                             Pricing Block 
-                                            <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
-                                                    <div class="inner-box" style="background-image:url(images/resource/price-2.jpg)">
-                                                            <h4>Standard Plan</h4>
-                                                            <div class="title">Here Goes Some Descripation</div>
-                                                            <div class="price">For 6 Month<span>$149</span></div>
-                                                            <ul class="price-list">
-                                                                    <li>Free Hand</li>
-                                                                    <li>Gym Fitness</li>
-                                                                    <li>Weight Loss</li>
-                                                                    <li>Personal Trainer</li>
-                                                            </ul>
-                                                            <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one" type="submit"><span class="txt">Select Now</span></a></div>
-                                                    </div>
-                                            </div>
-                                            
-                                             Pricing Block 
-                                            <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
-                                                    <div class="inner-box" style="background-image:url(images/resource/price-3.jpg)">
-                                                            <h4>Ultimate Plan</h4>
-                                                            <div class="title">Here Goes Some Descripation</div>
-                                                            <div class="price">For 1 Year<span>$249</span></div>
-                                                            <ul class="price-list">
-                                                                    <li>Free Hand</li>
-                                                                    <li>Gym Fitness</li>
-                                                                    <li>Weight Loss</li>
-                                                                    <li>Personal Trainer</li>
-                                                            </ul>
-                                                            <div class="btn-one-outer"><a href="#" class="theme-btn btn-style-one" type="submit"><span class="txt">Select Now</span></a></div>
-                                                    </div>
-                                            </div>
-                                            
-                                    </div>
-                            </div>
-                    </section>
-                     End Pricing Section -->
+
+
 
             <!-- Clients Section -->
             <section class="clients-section style-two">
@@ -644,10 +620,50 @@
         </div>
         <!-- End Header Search -->
 
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+        <script>
+                                    var startdate = "";
+                                    $(function () {
+                                        $("#datepicker").datepicker({
+                                            minDate: 0
+                                        });
+                                        startdate = $("#datepicker");
+                                    });
+
+                                    function getEndDate() {
+                                        // Get the selected date from jQuery UI Datepicker
+                                        var selectedDate = $("#datepicker").datepicker("getDate");
+
+                                        if (!selectedDate) {
+                                            alert("Please select a valid start date.");
+                                            return;
+                                        }
+
+                                        // Calculate end date by adding duration
+                                        var result = new Date(selectedDate);
+                                        var choosedate = (result.getMonth() + 1) + "/" + result.getDate() + "/" + result.getFullYear();
+                                        result.setDate(result.getDate() + parseInt(duration));
+
+                                        var enddate = (result.getMonth() + 1) + "/" + result.getDate() + "/" + result.getFullYear();
+
+                                        // Display results
+                                        document.getElementById("enddate").innerHTML = enddate;
+                                        document.getElementById("choosedate").innerHTML = choosedate;
+                                    }
+
+
+
+
+        </script>
+
+
         <!--Scroll to top-->
         <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-arrow-up"></span></div>
 
-        <script src="js/jquery.js"></script>
+        <!--<script src="js/jquery.js"></script>-->
 
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -663,6 +679,12 @@
         <script src="js/jquery-ui.js"></script>
         <script src="js/script.js"></script>
         <script src="js/color-settings.js"></script>
+
+
+
+
+
+
 
         <!--Google Map APi Key-->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIJ_QKHN-bi6_1C9f5eYE3pZs1zhQIo5o"></script>

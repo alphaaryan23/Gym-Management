@@ -28,35 +28,55 @@
 
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <script>
-            function login() {
+       <script>
+    function login() {
+        var pass = document.getElementById("upassword").value;
+        var email = document.getElementById("uemail").value;
 
-                var pass = document.getElementById("upassword").value;
-                var email = document.getElementById("uemail").value;
-                var formdata = new FormData();
+        // Check for empty fields
+        if (!email || !pass) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty Fields',
+                text: 'Please fill in both email and password.'
+            });
+            return;
+        }
 
-                formdata.append("pass", pass);
-                formdata.append("email", email);
+        var formdata = new FormData();
+        formdata.append("pass", pass);
+        formdata.append("email", email);
 
-                var url = "/userlogin";
-                fetch(url, {method: "POST", body: formdata})
-                        .then(response => response.text())
-                        .then(ans => renderAsHtml(ans));
-            }
+        var url = "/userlogin";
+        fetch(url, { method: "POST", body: formdata })
+            .then(response => response.text())
+            .then(ans => renderAsHtml(ans));
+    }
 
-            function renderAsHtml(ans) {
-                console.log(ans);
-                if (ans === "success") {                   
-                window.location.href="/uhome";            
-                } else
-                {
-                    alert(ans);
+    function renderAsHtml(ans) {
+        console.log(ans);
+        if (ans === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful',
+                text: 'Welcome back!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/uhome";
                 }
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: 'Incorrect email or password.'
+            });
+        }
+    }
+</script>
 
-
-            }
-        </script>
 
     </head>
 

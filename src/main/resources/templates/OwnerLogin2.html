@@ -29,42 +29,57 @@
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
 
-        <script>
-            function login() {
-              
-                var pass = document.getElementById("opassword").value;
-                var email = document.getElementById("oemail").value;
-                 
-               
+   <!-- Include SweetAlert2 library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                var formdata = new FormData();
-                 
-                formdata.append("pass", pass);
-                formdata.append("email", email);
-                
+<script>
+    function login() {
+        var email = document.getElementById("oemail").value;
+        var pass = document.getElementById("opassword").value;
 
+        
+        if (!email || !pass) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty Fields',
+                text: 'Please enter both email and password.'
+            });
+        } else {
+            var formdata = new FormData();
+            formdata.append("email", email);
+            formdata.append("pass", pass);
 
-                var url = "/ownerlogin";    
-                fetch(url, {method: "POST", body: formdata})
-                        .then(response => response.text())
-                        .then(ans => renderAsHtml(ans));
-            }
+            var url = "/ownerlogin";
+            fetch(url, { method: "POST", body: formdata })
+                .then(response => response.text())
+                .then(ans => renderAsHtml(ans));
+        }
+    }
 
-            function renderAsHtml(ans) {
-                console.log(ans);
-                if (ans === "success") {
-                    window.location.href="/OwnerHome";
-//                     window.location.href = "OwnerHome?id=" + id;
-                            
-                            
-                } else
-                {
-                    alert(ans);
+    function renderAsHtml(ans) {
+        console.log(ans);
+        if (ans === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful',
+                text: 'Welcome to Owner Dashboard!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/OwnerHome";
                 }
-
-
-            }
-        </script>
+            });
+        } else if(ans === "failed"){
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: 'Incorrect email or password. Please try again.'
+            });
+        }
+        else{
+            alert(ans);
+        }
+    }
+</script>
 
     </head>
 

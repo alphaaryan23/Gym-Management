@@ -84,7 +84,6 @@
                 console.log(arr);
 
                 var p = "";
-
                 for (var j = 0; j < arr.length; j++) {
                     var s = arr[j];
                     var inclusionList = s.inclusion.split(",");
@@ -100,8 +99,8 @@
             <div class="pricing-block col-lg-4 col-md-6 col-sm-12">
                 <div class="inner-box" style="background-image:url(images/resource/price-1.jpg)">
                     <h4>${s.pname}</h4>
-                    <div class="title">${s.ogdesc}</div>
-                    <div class="price">For ${s.duration} Days <span>${s.pprice}</span></div>
+                   
+                    <div class="price">For ${s.duration} Days <span>Rs. ${s.pprice}</span></div>
                     ${inclusionHTML}
                     
                         
@@ -114,6 +113,7 @@
 
 
                 document.getElementById("ugd1").innerHTML = p;
+
             }
 
             function usershowpackagedetail(id)
@@ -345,7 +345,7 @@
                                                                             <li>Our personal trainers will help you find a perfect workout.</li>
                                                                         </ul>-->
                                     <h3>FUN WORKOUTS</h3>
-                                    <p>Discover the joy of movement with our fun workouts designed to make fitness exciting! Whether you're dancing to your favorite beats, crushing a circuit challenge, or trying a new group class, every session is packed with energy and motivation. Get fit, stay happy, and enjoy every rep with us!</p><br>
+                                    <div class="text" id="description"><p>Who said workouts have to be boring? At our gym, fitness is fun! Join high-energy classes, challenge yourself with friendly competitions, or just vibe out with your workout crew. It’s not just about results — it’s about enjoying the journey</p></div><br>
                                     <div class="row clearfix">
 
                                         <!-- Column -->

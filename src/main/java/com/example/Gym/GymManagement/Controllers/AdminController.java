@@ -30,16 +30,17 @@ public class AdminController {
       {
           return "AdminManageOwner";
       }
-        @GetMapping("/usersignup")
-      public String usersignup()
-      {
-          return "UserSignup";
-      }
+
       
        @GetMapping("/userlogin")
       public String userlogin()
       {
           return "UserLogin";
+      }
+        @GetMapping("/usersignup")
+      public String usersignup()
+      {
+          return "UserSignup";
       }
      
          @GetMapping("/uhome")
@@ -62,5 +63,15 @@ public class AdminController {
       public String usergymdetail()
      {
           return "UserGymDetail";
+      }
+        @GetMapping("/payment")
+      public String payment()
+     {
+          return "Payment";
+      }
+       @GetMapping("/userbookinghistory")
+      public String userbookinghistory()
+     {
+          return "UserBookingHistory";
       }
 }

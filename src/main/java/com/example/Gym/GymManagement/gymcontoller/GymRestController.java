@@ -60,6 +60,7 @@ public class GymRestController {
             ResultSet rs = DbLoader.executeQuery("Select * from  ownersignup where oemail = '" + email + "' and opassword = '" + pass + "' ");
             if (rs.next()) {
                 session.setAttribute("id", rs.getInt("id"));
+              
                 return "success";
             } else {
                 return "failed";
@@ -193,6 +194,7 @@ public class GymRestController {
 
         try {
             ResultSet rs = DbLoader.executeQuery("select * from packagetable where pname='" + pname + "'");
+            
             if (rs.next()) {
                 return "fail";
             } else {
@@ -302,7 +304,7 @@ public class GymRestController {
             ResultSet rs = DbLoader.executeQuery("select * from ownersignup where id='" + oid + "'");
             if (rs.next()) {
                 
-                 rs.moveToCurrentRow();
+                rs.moveToCurrentRow();
                 rs.updateString("oname", name);
                 rs.updateString("ocity", city);
                 rs.updateString("franchise", franchise);
@@ -321,5 +323,51 @@ public class GymRestController {
     public String showgympack(@RequestParam String sgpid) {
         String ans = new RDBMS_TO_JSON().generateJSON("select * from packagetable where id='"+sgpid+"'");
         return ans;
+    }
+    
+     @PostMapping("/bookingpayment")
+    public String bookingpayment(HttpSession session , @RequestParam int pid , @RequestParam String sid, @RequestParam String eid , @RequestParam String ppid) {
+        try{
+            String useremail = (String) session.getAttribute("useremail");
+            int gid = 0;
+            int ownerid = 0;
+            String ownerEmail = "";
+            String pname = "";
+            ResultSet rs = DbLoader.executeQuery("select * from packagetable where id = "+pid+" ");
+            if(rs.next()){
+               gid = rs.getInt("gid");
+               pname = rs.getString("pname");
+            }
+            
+            ResultSet rs2 = DbLoader.executeQuery("select * from ownergym where id ="+gid+" ");
+            if(rs2.next()){
+               ownerid = rs2.getInt("ownerid");
+            }
+            
+            ResultSet rs3 = DbLoader.executeQuery("select * from ownersignup where id ="+ownerid+" ");
+            if(rs3.next()){
+                ownerEmail = rs3.getString("oemail");
+            }
+            
+            ResultSet rs4 = DbLoader.executeQuery("select * from paymenttable ");
+            
+                rs4.moveToInsertRow();
+                rs4.updateInt("packageid", pid);
+                rs4.updateString("startdate", sid);
+                rs4.updateString("enddate", eid);
+                rs4.updateString("price", ppid);
+                rs4.updateString("useremail", useremail);
+                rs4.updateString("owneremail", ownerEmail);
+                rs4.updateString("packagename", pname);
+                rs4.updateString("paymenttype", "online"); 
+                rs4.updateString("address", "N/A");
+                rs4.insertRow();
+           return "success";
+            
+        }catch(Exception ex){
+        ex.printStackTrace();
+            return ex.toString();
+        }
+
     }
 }
