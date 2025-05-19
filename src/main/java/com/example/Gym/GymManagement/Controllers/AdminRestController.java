@@ -20,12 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminRestController {
 
     @PostMapping("/adminLogin")
-    public String adminlogin(@RequestParam String name, @RequestParam String pass) {
+    public String adminlogin(@RequestParam String name, @RequestParam String pass , HttpSession session) {
         try {
             System.out.println("Name " + name);
             System.out.println("Pass " + pass);
             ResultSet rs = DbLoader.executeQuery("Select * from  admintable where name = '" + name + "' and password = '" + pass + "' ");
             if (rs.next()) {
+                 session.setAttribute("adminname", name);
                 return "success";
             } else {
                 return "failed";
@@ -160,8 +161,45 @@ public class AdminRestController {
         String ans = new RDBMS_TO_JSON().generateJSON("select * from paymenttable where useremail='"+useremail+"'");
         return ans;
     }
-  }
-
-
-
+    
+     @PostMapping("/changePassword")
+    public String changePassword(HttpSession session , @RequestParam String oldPass, @RequestParam String newPass) {
+        String admindetail = (String) session.getAttribute("adminname");
+    try {
+       
+        ResultSet rs = DbLoader.executeQuery("SELECT * FROM admintable WHERE name='" + admindetail + "' AND password='" + oldPass + "'");
+        if (rs.next()) {
+           rs.updateString("password", newPass);  
+            rs.updateRow();
+             return "success";
+    } else {
+      return "fail";
+        }
+  }catch (Exception ex) {
+        ex.printStackTrace();
+            return ex.toString();     
+    }
+    }
+    
+     @PostMapping("/dochangeuserPassword")
+    public String dochangeuserPassword(HttpSession session , @RequestParam String oldPass, @RequestParam String newPass) {
+        String userdetail = (String) session.getAttribute("useremail");
+         System.out.println(userdetail);
+    try {
+       
+        ResultSet rs = DbLoader.executeQuery("SELECT * FROM usersignup WHERE useremail='" + userdetail + "' AND userpassword='" + oldPass + "'");
+        if (rs.next()) {
+           rs.updateString("userpassword", newPass);  
+            rs.updateRow();
+             return "success";
+    } else {
+      return "fail";
+        }
+  }catch (Exception ex) {
+        ex.printStackTrace();
+            return ex.toString();     
+    }
+    }
+    
+}
     

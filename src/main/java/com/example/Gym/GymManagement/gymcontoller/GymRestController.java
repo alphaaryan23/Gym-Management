@@ -60,6 +60,7 @@ public class GymRestController {
             ResultSet rs = DbLoader.executeQuery("Select * from  ownersignup where oemail = '" + email + "' and opassword = '" + pass + "' ");
             if (rs.next()) {
                 session.setAttribute("id", rs.getInt("id"));
+                 session.setAttribute("owneremail", email);
               
                 return "success";
             } else {
@@ -369,5 +370,23 @@ public class GymRestController {
             return ex.toString();
         }
 
+    }
+    @PostMapping("/dochangeownerPassword")
+    public String dochangeownerPassword(HttpSession session , @RequestParam String oldPass, @RequestParam String newPass) {
+        String ownerdetail = (String) session.getAttribute("owneremail");
+    try {
+       
+        ResultSet rs = DbLoader.executeQuery("SELECT * FROM ownersignup WHERE oemail='" + ownerdetail + "' AND opassword='" + oldPass + "'");
+        if (rs.next()) {
+           rs.updateString("opassword", newPass);  
+            rs.updateRow();
+             return "success";
+    } else {
+      return "fail";
+        }
+  }catch (Exception ex) {
+        ex.printStackTrace();
+            return ex.toString();     
+    }
     }
 }
