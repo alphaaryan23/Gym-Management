@@ -81,4 +81,10 @@ public class GymController {
           return "ChangeOwnerPassword";
         }
       }
+      @GetMapping("/logout")
+    public String logout(HttpSession session)
+    {
+        session.invalidate();
+        return "redirect:/";
+    }
 }

@@ -73,69 +73,69 @@
             });
         }
     }
-     function showChangePassword() {
-    Swal.fire({
-        title: 'Change Password',
-        html:
-            `<input type="password" id="oldPass" class="swal2-input" placeholder="Old Password">
-             <input type="password" id="newPass" class="swal2-input" placeholder="New Password">
-             <input type="password" id="confirmPass" class="swal2-input" placeholder="Confirm Password">`,
-        focusConfirm: false,
-        showCancelButton: true,
-        confirmButtonText: 'Update Password',
-        preConfirm: () => {
-            const oldPass = document.getElementById('oldPass').value;
-            const newPass = document.getElementById('newPass').value;
-            const confirmPass = document.getElementById('confirmPass').value;
-
-            if (!oldPass || !newPass || !confirmPass) {
-                Swal.showValidationMessage('All fields are required');
-                return false;
-            }
-
-            if (newPass !== confirmPass) {
-                Swal.showValidationMessage('New and confirm passwords do not match');
-                return false;
-            }
-
-            return { oldPass, newPass };
-        }
-    }).then((result) => {
-        if (result.isConfirmed && result.value) {
-            const { oldPass, newPass } = result.value;
-            updatePassword(oldPass, newPass);
-        }
-    });
-}
-function updatePassword(oldPass, newPass) {
-    const formData = new FormData();
-    formData.append("oldPass", oldPass);
-    formData.append("newPass", newPass);
-
-    fetch("/changePassword", { method: "POST", body: formData })
-        .then(response => response.text())
-        .then(ans => {
-            if (ans === "updated") {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Password Changed',
-                    text: 'Your password was updated successfully.'
-                });
-            } else if (ans === "wrong_old") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Incorrect Old Password',
-                    text: 'Please enter your correct current password.'
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Update Failed',
-                    text: 'Something went wrong. Please try again.'
-                });
-            }
-        });
-}
+//     function showChangePassword() {
+//    Swal.fire({
+//        title: 'Change Password',
+//        html:
+//            `<input type="password" id="oldPass" class="swal2-input" placeholder="Old Password">
+//             <input type="password" id="newPass" class="swal2-input" placeholder="New Password">
+//             <input type="password" id="confirmPass" class="swal2-input" placeholder="Confirm Password">`,
+//        focusConfirm: false,
+//        showCancelButton: true,
+//        confirmButtonText: 'Update Password',
+//        preConfirm: () => {
+//            const oldPass = document.getElementById('oldPass').value;
+//            const newPass = document.getElementById('newPass').value;
+//            const confirmPass = document.getElementById('confirmPass').value;
+//
+//            if (!oldPass || !newPass || !confirmPass) {
+//                Swal.showValidationMessage('All fields are required');
+//                return false;
+//            }
+//
+//            if (newPass !== confirmPass) {
+//                Swal.showValidationMessage('New and confirm passwords do not match');
+//                return false;
+//            }
+//
+//            return { oldPass, newPass };
+//        }
+//    }).then((result) => {
+//        if (result.isConfirmed && result.value) {
+//            const { oldPass, newPass } = result.value;
+//            updatePassword(oldPass, newPass);
+//        }
+//    });
+//}
+//function updatePassword(oldPass, newPass) {
+//    const formData = new FormData();
+//    formData.append("oldPass", oldPass);
+//    formData.append("newPass", newPass);
+//
+//    fetch("/changePassword", { method: "POST", body: formData })
+//        .then(response => response.text())
+//        .then(ans => {
+//            if (ans === "updated") {
+//                Swal.fire({
+//                    icon: 'success',
+//                    title: 'Password Changed',
+//                    text: 'Your password was updated successfully.'
+//                });
+//            } else if (ans === "wrong_old") {
+//                Swal.fire({
+//                    icon: 'error',
+//                    title: 'Incorrect Old Password',
+//                    text: 'Please enter your correct current password.'
+//                });
+//            } else {
+//                Swal.fire({
+//                    icon: 'error',
+//                    title: 'Update Failed',
+//                    text: 'Something went wrong. Please try again.'
+//                });
+//            }
+//        });
+//}
 
 </script>
 

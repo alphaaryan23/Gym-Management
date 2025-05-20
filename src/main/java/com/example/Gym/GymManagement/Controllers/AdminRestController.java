@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.FileOutputStream;
 import java.sql.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class AdminRestController {
-
+    
+    @Autowired
+    public EmailSenderService email;
+   
     @PostMapping("/adminLogin")
     public String adminlogin(@RequestParam String name, @RequestParam String pass , HttpSession session) {
         try {
@@ -200,6 +204,11 @@ public class AdminRestController {
             return ex.toString();     
     }
     }
-    
+    @GetMapping("/sendemail")
+    public String sendemail()
+    {
+        this.email.sendSimpleEmail("kumararyan4880@gmail.com", "Hello Everyone this is email testing mode", "Email Testing");
+        return "success";
+    }
 }
     
