@@ -18,12 +18,9 @@ public class AdminController {
 
     @GetMapping("/ahome")
     public String ahome(HttpSession session) {
-        String aname = (String) session.getAttribute("adminname");
-        if(aname == null){
-            return "redirect:/alogin";
-        }else{
+       
         return "AdminHome";
-        }
+        
     }
 
     @GetMapping("/AdminManageCities")
@@ -66,14 +63,11 @@ public class AdminController {
         return "UserSignup";
     }
 
-    @GetMapping("/uhome")
+    @GetMapping("/")
     public String uhome(HttpSession session) {
-        String uemail = (String) session.getAttribute("useremail");
-        if (uemail == null) {
-            return "redirect:/userlogin";
-        } else {
+       
             return "UserHome";
-        }
+        
     }
 
     @GetMapping("/morecities")
@@ -146,6 +140,19 @@ public class AdminController {
         } else {
             return "ChangeUserPassword";
         }
+    }
+       @GetMapping("/logout")
+    public String logout(HttpSession session)
+    {
+        session.invalidate();
+        return "redirect:/";
+    }
+    
+     @GetMapping("/logout3")
+    public String logout3(HttpSession session)
+    {
+        session.invalidate();
+        return "redirect:/";
     }
 
 }

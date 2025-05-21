@@ -4,11 +4,13 @@
  */
 package com.example.Gym.GymManagement.gymcontoller;
 
+import com.example.Gym.GymManagement.Controllers.EmailSenderService;
 import com.example.Gym.GymManagement.Vmm.DbLoader;
 import com.example.Gym.GymManagement.Vmm.RDBMS_TO_JSON;
 import jakarta.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.sql.ResultSet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class GymRestController {
+    
+     @Autowired
+    public EmailSenderService email;
+   
 
     @PostMapping("/ownersignup")
     public String ownersignup(@RequestParam String name, @RequestParam String pass, @RequestParam String email, @RequestParam String city, @RequestParam String franchise, @RequestParam MultipartFile photo) {
@@ -389,4 +395,50 @@ public class GymRestController {
             return ex.toString();     
     }
     }
+    
+    
+    @GetMapping("/oforgot")
+    public String forgot(@RequestParam String email, @RequestParam String otp) {
+        try {
+            ResultSet rs = DbLoader.executeQuery("select * from ownersignup where oemail='" + email + "'");
+            if (rs.next()) {
+                String body = "Your otp for login page is =" + otp;
+                String subject = "Login Authntication";
+                this.email.sendSimpleEmail(email, body, subject);
+                return "success";
+            } else {
+                return "fail";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+
+    @GetMapping("/ootpverify")
+    public String otpverify(@RequestParam String email) {
+        try {
+            ResultSet rs = DbLoader.executeQuery("select * from ownersignup where oemail='" + email + "'");
+            if (rs.next()) {
+                rs.moveToCurrentRow();
+                String pass = rs.getString("opassword");
+                String subject = "Your Account Password - JC Pawfect";
+                String body = "Dear User,\n\n"
+                        + "As per your request, here is your account password:\n\n"
+                        + "Password: " + pass + "\n\n"
+                        + "Please do not share this password with anyone.\n"
+                        + "We recommend changing your password after login for better security.\n\n"
+                        + "Regards,\n"
+                        + "JC Pawfect Team";
+                this.email.sendSimpleEmail(email, body, subject);
+                return "success";
+            } else {
+                return "fail";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+    
 }

@@ -23,12 +23,9 @@ public class GymController {
       }
        @GetMapping("/OwnerHome")
       public String OwnerHome(HttpSession session)
-      {String oemail = (String) session.getAttribute("owneremail");
-        if (oemail == null) {
-            return "redirect:/ownerlogin";
-        } else {
+      {
           return "OwnerHome";
-        }
+        
       }
        @GetMapping("/oManageGym")
     public String oManageGym(HttpSession session)
@@ -81,10 +78,18 @@ public class GymController {
           return "ChangeOwnerPassword";
         }
       }
-      @GetMapping("/logout")
+      
+      
+      @GetMapping("/addedgyms")
+      public String addedgyms()
+      {
+          return "OwnerAddedGym";
+      }
+        @GetMapping("/logout2")
     public String logout(HttpSession session)
     {
         session.invalidate();
         return "redirect:/";
     }
+   
 }

@@ -124,71 +124,71 @@
 
 
         <script>
-            function Add() {
-
-
-                var gymname = document.getElementById("gymn").value;
-                var address = document.getElementById("address").value;
-                var myDropdown = document.getElementById("myDropdown").value;
-                var latitude = document.getElementById("latitude").value;
-                var longitude = document.getElementById("longitude").value;
-                var ameneties = document.getElementById("ameneties").value;
-                var description = document.getElementById("description").value;
-                var photo = document.getElementById("photo").files[0];
-
-                var formdata = new FormData();
-                formdata.append("gymname", gymname);
-                formdata.append("address", address);
-                formdata.append("myDropdown", myDropdown);
-                formdata.append("latitude", latitude);
-                formdata.append("longitude", longitude);
-                formdata.append("ameneties", ameneties);
-                 formdata.append("description", description);
-                formdata.append("photo", photo);
-
-                var url = "/ownermanagegym";
-                fetch(url, {method: "POST", body: formdata})
-                        .then(response => response.text())
-                        .then(ans => renderAsHtml(ans));
-
-            }
-            function renderAsHtml(ans) {
-                if (ans === "Added Successfully") {
-                    alert("Gym added successfully!");
-                    getcities();
-                    getgymdetails();
-                } else {
-                    alert("Failed: " + ans);
-                }
-            }
-
-
-
-
-            function getcities() {
-                fetch("/getcities")
-                        .then(response => response.text())
-                        .then(ans => renderCities(ans));
-            }
-
-            function renderCities(ans) {
-                var mainobj = JSON.parse(ans);
-                var arr = mainobj["ans"];
-                var a = "";
-                a += ` <option selected disabled>-- Select a city --</option>`;
-                for (var i = 0; i < arr.length; i++)
-                {
-                    var ct = arr[i];
-                    a += `<option value="${ct.id}">${ct.cname}</option>`;
-
-
-                }
-
-
-                document.getElementById("myDropdown").innerHTML = a; 
-            }
-
-
+//            function Add() {
+//
+//
+//                var gymname = document.getElementById("gymn").value;
+//                var address = document.getElementById("address").value;
+//                var myDropdown = document.getElementById("myDropdown").value;
+//                var latitude = document.getElementById("latitude").value;
+//                var longitude = document.getElementById("longitude").value;
+//                var ameneties = document.getElementById("ameneties").value;
+//                var description = document.getElementById("description").value;
+//                var photo = document.getElementById("photo").files[0];
+//
+//                var formdata = new FormData();
+//                formdata.append("gymname", gymname);
+//                formdata.append("address", address);
+//                formdata.append("myDropdown", myDropdown);
+//                formdata.append("latitude", latitude);
+//                formdata.append("longitude", longitude);
+//                formdata.append("ameneties", ameneties);
+//                 formdata.append("description", description);
+//                formdata.append("photo", photo);
+//
+//                var url = "/ownermanagegym";
+//                fetch(url, {method: "POST", body: formdata})
+//                        .then(response => response.text())
+//                        .then(ans => renderAsHtml(ans));
+//
+//            }
+//            function renderAsHtml(ans) {
+//                if (ans === "Added Successfully") {
+//                    alert("Gym added successfully!");
+//                    getcities();
+//                    getgymdetails();
+//                } else {
+//                    alert("Failed: " + ans);
+//                }
+//            }
+//
+//
+//
+//
+//            function getcities() {
+//                fetch("/getcities")
+//                        .then(response => response.text())
+//                        .then(ans => renderCities(ans));
+//            }
+//
+//            function renderCities(ans) {
+//                var mainobj = JSON.parse(ans);
+//                var arr = mainobj["ans"];
+//                var a = "";
+//                a += ` <option selected disabled>-- Select a city --</option>`;
+//                for (var i = 0; i < arr.length; i++)
+//                {
+//                    var ct = arr[i];
+//                    a += `<option value="${ct.id}">${ct.cname}</option>`;
+//
+//
+//                }
+//
+//
+//                document.getElementById("myDropdown").innerHTML = a; 
+//            }
+//
+//
 
             function getgymdetails() {
                 var url = "/getgymdetails";
@@ -267,7 +267,7 @@
 
     </head>
 
-    <body class="hidden-bar-wrapper" onload="getcities();">
+    <body class="hidden-bar-wrapper" onload="getgymdetails(); getcities();">
 
         <div class="page-wrapper">
 
@@ -507,14 +507,14 @@
                     <div class="row clearfix">
 
                         <!--Form Column-->
-                        <div class="form-column column col-lg-12 col-md-12 col-sm-12">
+<!--                        <div class="form-column column col-lg-12 col-md-12 col-sm-12">
 
                             <div class="sec-title">
                                 <h2>Owner Gym</h2>
                                 <div class="separate"></div>
                             </div>
 
-                            <!--Login Form-->
+                            Login Form
                             <div class="styled-form login-form">
                                 <form>
 
@@ -573,7 +573,7 @@
                             </div>
 
                             </form>
-                        </div>
+                        </div>-->
 
                     </div>
                 </div>

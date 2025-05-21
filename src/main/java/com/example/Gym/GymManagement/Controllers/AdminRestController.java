@@ -210,5 +210,52 @@ public class AdminRestController {
         this.email.sendSimpleEmail("kumararyan4880@gmail.com", "Hello Everyone this is email testing mode", "Email Testing");
         return "success";
     }
+    
+    @GetMapping("/forgot")
+    public String forgot(@RequestParam String email, @RequestParam String otp) {
+        try {
+            ResultSet rs = DbLoader.executeQuery("select * from usersignup where useremail='" + email + "'");
+            if (rs.next()) {
+                String body = "Your otp for login page is =" + otp;
+                String subject = "Login Authntication";
+                this.email.sendSimpleEmail(email, body, subject);
+                return "success";
+            } else {
+                return "fail";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+
+    @GetMapping("/otpverify")
+    public String otpverify(@RequestParam String email) {
+        try {
+            ResultSet rs = DbLoader.executeQuery("select * from usersignup where useremail='" + email + "'");
+            if (rs.next()) {
+                rs.moveToCurrentRow();
+                String pass = rs.getString("userpassword");
+                String subject = "Your Account Password - JC Pawfect";
+                String body = "Dear User,\n\n"
+                        + "As per your request, here is your account password:\n\n"
+                        + "Password: " + pass + "\n\n"
+                        + "Please do not share this password with anyone.\n"
+                        + "We recommend changing your password after login for better security.\n\n"
+                        + "Regards,\n"
+                        + "JC Pawfect Team";
+                this.email.sendSimpleEmail(email, body, subject);
+                return "success";
+            } else {
+                return "fail";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.toString();
+        }
+    }
+    
+    
+   
 }
     
