@@ -83,44 +83,44 @@
             .theme-btn.btn-style-three:hover {
                 background-color: #e55a5a;
             }
-           
-    table {
-        border-radius: 10px;
-        overflow: hidden;
-    }
 
-    .table td, .table th {
-        vertical-align: middle;
-        padding: 15px;
-        font-size: 15px;
-    }
+            table {
+                border-radius: 10px;
+                overflow: hidden;
+            }
 
-    .table img {
-        border-radius: 8px;
-        width: 100px;
-        height: auto;
-        object-fit: cover;
-    }
+            .table td, .table th {
+                vertical-align: middle;
+                padding: 15px;
+                font-size: 15px;
+            }
 
-    button.btn {
-        width: 100px;
-        font-weight: 500;
-    }
+            .table img {
+                border-radius: 8px;
+                width: 100px;
+                height: auto;
+                object-fit: cover;
+            }
 
-    td.description {
-        max-width: 250px;
-        overflow-y: auto;
-        white-space: normal;
-    }
+            button.btn {
+                width: 100px;
+                font-weight: 500;
+            }
 
-    .table-hover tbody tr:hover {
-        background-color: #2b2b2b;
-        transform: scale(1.01);
-        transition: 0.2s ease-in-out;
-    }
-</style>
+            td.description {
+                max-width: 250px;
+                overflow-y: auto;
+                white-space: normal;
+            }
 
-       
+            .table-hover tbody tr:hover {
+                background-color: #2b2b2b;
+                transform: scale(1.01);
+                transition: 0.2s ease-in-out;
+            }
+        </style>
+
+
 
 
         <script>
@@ -143,7 +143,7 @@
                 formdata.append("latitude", latitude);
                 formdata.append("longitude", longitude);
                 formdata.append("ameneties", ameneties);
-                 formdata.append("description", description);
+                formdata.append("description", description);
                 formdata.append("photo", photo);
 
                 var url = "/ownermanagegym";
@@ -154,14 +154,13 @@
             }
             function renderAsHtml(ans) {
                 if (ans === "Added Successfully") {
-                    alert("Gym added successfully!");
+                    Swal.fire("Success", "Gym added successfully!", "success");
                     getcities();
                     getgymdetails();
                 } else {
-                    alert("Failed: " + ans);
+                    Swal.fire("Failed", "Error: " + ans, "error");
                 }
             }
-
 
 
 
@@ -185,7 +184,7 @@
                 }
 
 
-                document.getElementById("myDropdown").innerHTML = a; 
+                document.getElementById("myDropdown").innerHTML = a;
             }
 
 
@@ -196,12 +195,12 @@
                         .then(response => response.text())
                         .then(ans => renderGyms(ans));
             }
-           function renderGyms(ans) {
-        console.log(ans);
-        var mainobj = JSON.parse(ans);
-        var arr = mainobj["ans"];
-        var g = "";
-        g += `<h4 class="mt-5 text-light">Gym Details Table</h4>
+            function renderGyms(ans) {
+                console.log(ans);
+                var mainobj = JSON.parse(ans);
+                var arr = mainobj["ans"];
+                var g = "";
+                g += `<h4 class="mt-5 text-light">Gym Details Table</h4>
         <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover table-dark align-middle text-center shadow mt-3">
             <thead class="thead-dark">
@@ -220,11 +219,11 @@
             </thead>
             <tbody>`;
 
-        for (var i = 0; i < arr.length; i++) {
-            var gym = arr[i];
-            var amenitiesArr = gym.Ameneties.split(',').map(a => `<span class="badge bg-success mx-1">${a.trim()}</span>`).join('');
+                for (var i = 0; i < arr.length; i++) {
+                    var gym = arr[i];
+                    var amenitiesArr = gym.Ameneties.split(',').map(a => `<span class="badge bg-success mx-1">${a.trim()}</span>`).join('');
 
-            g += `<tr>
+                    g += `<tr>
                 <td>${gym.gymname}</td>
                 <td>${gym.Address}</td>
                 <td>${gym.ogcity}</td>
@@ -236,34 +235,44 @@
                 <td><button class="btn btn-danger" onclick="deleteGym(${gym.id})">Delete</button></td>
                 <td><button onclick="pkg(${gym.id})" class="btn btn-primary">Package</button></td>
             </tr>`;
-        }
-
-        g += `</tbody></table></div>`;
-        document.getElementById("g1").innerHTML = g;
-    }
-             function pkg(id)
-             {
-                 window.location.href="/packageTable?id="+id;
-             }
-            function deleteGym(id) {
-                if (confirm("Are you sure you want to delete this city?")) {
-                    var formdata = new FormData();
-                    formdata.append("id", id);
-
-                    fetch("/deleteGym", {method: "POST", body: formdata})
-                            .then(response => response.text())
-                            .then(ans => {
-                                if (ans === "success") {
-                                    alert("Gym deleted successfully.");
-                                    getgymdetails();
-                                } else {
-                                    alert("Error deleting city: " + ans);
-                                }
-                            });
                 }
+
+                g += `</tbody></table></div>`;
+                document.getElementById("g1").innerHTML = g;
+            }
+            function pkg(id)
+            {
+                window.location.href = "/packageTable?id=" + id;
+            }
+            function deleteGym(id) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var formdata = new FormData();
+                        formdata.append("id", id);
+
+                        fetch("/deleteGym", {method: "POST", body: formdata})
+                                .then(response => response.text())
+                                .then(ans => {
+                                    if (ans === "success") {
+                                        Swal.fire("Deleted!", "Gym deleted successfully.", "success");
+                                        getgymdetails();
+                                    } else {
+                                        Swal.fire("Error!", "Error deleting gym: " + ans, "error");
+                                    }
+                                });
+                    }
+                });
             }
 
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     </head>
 
@@ -275,161 +284,9 @@
             <div class="preloader"></div>
 
             <!-- Main Header-->
-            <header class="main-header header-style-two">
 
-                <!-- Header Top -->
-                <div class="header-top">
-                    <div class="auto-container">
-                        <div class="clearfix">
+            <div th:replace="OwnerHeader :: header"></div>
 
-                            <!-- Top Left -->
-                            <div class="top-left pull-left">
-                                <!-- Info List -->
-                                <ul class="info-list">
-                                    <li><span class="icon fa fa-location-arrow"></span> 27 Division St, New York, USA</li>
-                                    <li><span class="icon fa fa-phone"></span> <a href="tel:+1-044-123-456-789"> +1 (044) 123 456 789</a></li>
-                                    <li><span class="icon fa fa-envelope-o"></span> <a href="mailto:info@example.com"> info@example.com</a></li>
-                                </ul>
-                            </div>
-
-                            <!-- Top Right -->
-                            <div class="top-right pull-right">
-
-                                <!--Language-->
-                                <div class="language dropdown"><a class="btn btn-default dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="#"><span class="flag-icon fa fa-globe"></span>EN &nbsp;<span class="icon fa fa-angle-down"></span></a>
-                                    <ul class="dropdown-menu style-one" aria-labelledby="dropdownMenu2">
-                                        <li><a href="#">English</a></li>
-                                        <li><a href="#">German</a></li>
-                                        <li><a href="#">Arabic</a></li>
-                                        <li><a href="#">Hindi</a></li>
-                                    </ul>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Header Upper -->
-                <div class="header-upper">
-                    <div class="auto-container clearfix">
-
-                        <div class="pull-left logo-box">
-                            <div class="logo"><a href="index-2.html"><img src="images/logo.png" alt="" title=""></a></div>
-                        </div>
-
-                        <div class="nav-outer clearfix">
-                            <!--Mobile Navigation Toggler-->
-                            <div class="mobile-nav-toggler"><span class="icon flaticon-menu"></span></div>
-                            <!-- Main Menu -->
-                            <nav class="main-menu navbar-expand-md">
-                                <div class="navbar-header">
-                                    <!-- Toggle Button -->    	
-                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                </div>
-
-                                <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
-                                    <ul class="navigation clearfix">
-                                        <li class="dropdown"><a href="#">Home</a>
-                                            <ul>
-                                                <li><a href="index-2.html">Home Page 01</a></li>
-                                                <li><a href="index-3.html">Home Page 02</a></li>
-                                                <li><a href="index-4.html">Home Page 03</a></li>
-                                                <li class="dropdown"><a href="#">Header Styles</a>
-                                                    <ul>
-                                                        <li><a href="index-2.html">Header Style 01</a></li>
-                                                        <li><a href="index-3.html">Header Style 02</a></li>
-                                                        <li><a href="index-4.html">Header Style 03</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown"><a href="#">About</a>
-                                            <ul>
-                                                <li><a href="about.html">About Us</a></li>
-                                                <li><a href="faq.html">Faq</a></li>
-                                                <li><a href="price.html">Price</a></li>
-                                                <li><a href="team.html">Team</a></li>
-                                                <li><a href="time-table.html">Time Table</a></li>
-                                                <li><a href="testimonial.html">Testimonial</a></li>
-                                                <li><a href="comming-soon.html">Comming Soon</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown"><a href="#">Classes</a>
-                                            <ul>
-                                                <li><a href="classes.html">Classes</a></li>
-                                                <li><a href="classes-detail.html">Classes Detail</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown"><a href="#">Portfolio</a>
-                                            <ul>
-                                                <li><a href="portfolio.html">Portfolio</a></li>
-                                                <li><a href="portfolio-detail.html">Portfolio Detail</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="current dropdown"><a href="#">Shop</a>
-                                            <ul>
-                                                <li><a href="shop.html">Our Products</a></li>
-                                                <li><a href="shop-single.html">Product Single</a></li>
-                                                <li><a href="shopping-cart.html">Shopping Cart</a></li>
-                                                <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="Adminlogin.html">Account</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown"><a href="#">Blog</a>
-                                            <ul>
-                                                <li><a href="blog.html">Our Blog</a></li>
-                                                <li><a href="blog-single.html">Blog Single</a></li>
-                                                <li><a href="not-found.html">Not Found</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="contact.html">Contact us</a></li>
-                                    </ul>
-                                </div>
-                            </nav>
-
-                        </div>
-
-                    </div>
-                </div>
-                <!--End Header Upper-->
-
-                <!-- Sticky Header  -->
-                <div class="sticky-header">
-                    <div class="auto-container clearfix">
-                        <!--Logo-->
-                        <div class="logo pull-left">
-                            <a href="index-2.html" title=""><img src="images/logo-small.png" alt="" title=""></a>
-                        </div>
-                        <!--Right Col-->
-                        <div class="pull-right">
-                            <!-- Main Menu -->
-                            <nav class="main-menu">
-                                <!--Keep This Empty / Menu will come through Javascript-->
-                            </nav><!-- Main Menu End-->
-
-                        </div>
-                    </div>
-                </div><!-- End Sticky Menu -->
-
-                <!-- Mobile Menu  -->
-                <div class="mobile-menu">
-                    <div class="menu-backdrop"></div>
-                    <div class="close-btn"><span class="icon flaticon-multiply"></span></div>
-
-                    <nav class="menu-box">
-                        <div class="nav-logo"><a href="index-2.html"><img src="images/logo-2.png" alt="" title=""></a></div>
-                        <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
-                    </nav>
-                </div>
-                <!-- End Mobile Menu -->
-
-            </header>
             <!-- End Main Header -->
 
             <!--Page Title-->
@@ -552,7 +409,7 @@
                                         <label>Amenities</label>
                                         <textarea name="amenities" id="ameneties" rows="4" placeholder="e.g., abc, def, ghi " class="form-control"></textarea>
                                     </div>
-<div class="form-group col-12">
+                                    <div class="form-group col-12">
                                         <label>Description</label>
                                         <textarea name="description" id="description" rows="4" placeholder=" " class="form-control"></textarea>
                                     </div>

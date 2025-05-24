@@ -150,7 +150,7 @@ public class GymRestController {
                 rs.updateString("latitude", latitude);
                 rs.updateString("longitude", longitude);
                 rs.updateString("Ameneties", ameneties);
-                rs.updateString("Ameneties", description);
+                rs.updateString("ogdesc", description);
                 rs.updateString("ogphoto", orgName);
 
                 Integer s = (Integer) session.getAttribute("id");

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.FileOutputStream;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -255,7 +257,95 @@ public class AdminRestController {
         }
     }
     
+    @GetMapping("/userAddReview")
+    public String userAddReview(@RequestParam String gid, @RequestParam int rating, @RequestParam String comment, HttpSession session) {
+        String user_email = (String) session.getAttribute("useremail");
+        System.out.println(user_email);
+//        System.out.println(rating);
+        String ans = "";
+        try {
+            ResultSet rs = DbLoader.executeQuery("Select * from review_table");
+
+            rs.moveToInsertRow();
+            rs.updateString("gym_id", gid);
+            rs.updateString("user_email", user_email);
+            rs.updateString("comment", comment);
+            rs.updateInt("rating", rating);
+            rs.insertRow();
+            ans = "success";
+
+        } catch (Exception e) {
+            ans = e.toString();
+        }
+
+        return ans;
+    }
+
+
+    @GetMapping("/userShowAverageRatings")
+    public String userShowAverageRatings(@RequestParam String gid) {
+
+        // Assuming RDBMS_TO_JSON is available as a service or component
+        String ans = new RDBMS_TO_JSON().generateJSON("select avg(rating) as r1 from review_table where gym_id='" + gid + "' ");
+        System.out.println(ans);
+        return ans;
+
+    }
+
+    @GetMapping("/userShowRatings")
+    public String userShowRatings(@RequestParam String gid) {
+
+        // Assuming RDBMS_TO_JSON is available as a service or component
+        String ans = new RDBMS_TO_JSON().generateJSON("select * from review_table where gym_id='" + gid + "' ");
+        System.out.println(ans);
+        return ans;
+
+    }
     
+    
+    @GetMapping("/ApprovedButton1")
+    public String ApprovedButton(@RequestParam String accept)
+    {
+        ResultSet rs=DbLoader.executeQuery("select * from ownersignup where id='"+accept+"'");
+        try {
+            if(rs.next())
+            {
+                rs.moveToCurrentRow();
+                rs.updateString("ostatus", "Approved");
+                rs.updateRow();
+                return "success";
+            }
+            else{
+                return "fail";
+            }
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+           return ex.toString();
+        }
+    }
+    
+    
+     @GetMapping("/BlockedButton1")
+    public String BlockButton(@RequestParam String block)
+    {
+        ResultSet rs=DbLoader.executeQuery("select * from ownersignup where id='"+block+"'");
+        try {
+            if(rs.next())
+            {
+                rs.moveToCurrentRow();
+                rs.updateString("ostatus", "Blocked");
+                rs.updateRow();
+                return "success";
+            }
+            else{
+                return "fail";
+            }
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+           return ex.toString();
+        }
+    }
+
    
 }
     

@@ -29,33 +29,7 @@
         <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
         <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
 
-        <script>
-            function login() {
-                var name = document.getElementById("naam").value;
-                var pass = document.getElementById("pass").value;
-
-                var formdata = new FormData();
-                formdata.append("name", name);
-                formdata.append("pass", pass);
-
-                var url = "/adminLogin";    
-                fetch(url, {method: "POST", body: formdata})
-                        .then(response => response.text())
-                        .then(ans => renderAsHtml(ans));
-            }
-
-            function renderAsHtml(ans) {
-                console.log(ans)
-                if (ans === "success") {
-                    alert(ans);
-                } else
-                {
-                    alert(ans);
-                }
-
-
-            }
-        </script>
+      
 
     </head>
 
